@@ -152,7 +152,17 @@ td input::placeholder{color:var(--dim)}
 .col-pos{color:var(--accent2)} .col-neg{color:var(--accent3)} .col-warn{color:var(--accent4)}
 .no-data{padding:3rem;text-align:center;color:var(--dim);font-size:15px}
 
-/* ── AI検証サマリーバー ── */
+/* ── Layermateテーブル ── */
+.lm-table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface2);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.lm-table th{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em;background:var(--surface)}
+.lm-table td{padding:8px 14px;border-bottom:0.5px solid var(--border)}
+.lm-table tr:last-child td{border-bottom:none}
+.lm-type{font-size:13px;font-weight:500;color:var(--text);width:110px}
+.lm-auto{font-family:'DM Mono',monospace;font-size:14px;color:var(--accent4);width:130px}
+.lm-table input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:14px;padding:7px 10px;width:100%;outline:none}
+.lm-table input:focus{border-color:var(--accent)}
+.lm-total-row td{background:var(--surface);font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
+.lm-ratio{font-size:16px!important;font-weight:700!important}
 .ai-summary-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;padding:0;display:flex;align-items:stretch;overflow:hidden}
 .ai-sb-item{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:8px;flex:1}
 .ai-sb-item-wide{flex:1.5}
@@ -378,6 +388,56 @@ td input::placeholder{color:var(--dim)}
           <button class="add-row-btn" onclick="addAiEntry({})">＋ 検証を追加</button>
         </div>
       </div>
+
+      <!-- Layermateモニタリング -->
+      <div class="sec">
+        <div class="sec-hdr"><span class="sec-tag tag-a">Layermate</span><span class="sec-title">クレジットモニタリング</span></div>
+        <div class="sec-body">
+
+          <div class="roi-group-label">月次付与クレジット（共通）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
+            <div class="fld"><div class="fld-num">base</div><div class="fld-label">月次付与クレジット（cr）</div><input type="number" id="lm-grant" placeholder="例: 500" oninput="computeLm()"></div>
+            <div class="fld calc"><div class="fld-num">合計消費割合（自動）</div><div class="fld-label">（森崎＋佐藤）÷ 付与×2</div><div class="computed" id="lm-c-total-ratio"><span class="empty">—</span></div></div>
+          </div>
+
+          <div class="roi-group-label">森崎</div>
+          <div class="lm-person-block" style="margin-bottom:24px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px">
+              <div class="fld"><div class="fld-num">base</div><div class="fld-label">移管（cr）<span style="font-size:11px;color:var(--muted)"> ＋受け取り / －渡し</span></div><input type="number" id="lm-m-transfer" placeholder="例: +100 or -100" oninput="computeLm()"></div>
+              <div class="fld calc"><div class="fld-num">実質支給数（自動）</div><div class="fld-label">付与 ± 移管</div><div class="computed blue" id="lm-m-grant" style="font-size:18px"><span class="empty">—</span></div></div>
+            </div>
+            <table class="lm-table">
+              <thead><tr><th></th><th>案件数</th><th>消費数(cr)</th><th>平均単価(自動)</th></tr></thead>
+              <tbody>
+                <tr><td class="lm-type">ヘビー</td><td><input type="number" id="lm-m-h-cnt" placeholder="0" min="0" oninput="computeLm()"></td><td><input type="number" id="lm-m-h-cr" placeholder="0" min="0" oninput="computeLm()"></td><td class="lm-auto" id="lm-m-h-avg">—</td></tr>
+                <tr><td class="lm-type">スタンダード</td><td><input type="number" id="lm-m-s-cnt" placeholder="0" min="0" oninput="computeLm()"></td><td><input type="number" id="lm-m-s-cr" placeholder="0" min="0" oninput="computeLm()"></td><td class="lm-auto" id="lm-m-s-avg">—</td></tr>
+                <tr><td class="lm-type">ライト</td><td><input type="number" id="lm-m-l-cnt" placeholder="0" min="0" oninput="computeLm()"></td><td><input type="number" id="lm-m-l-cr" placeholder="0" min="0" oninput="computeLm()"></td><td class="lm-auto" id="lm-m-l-avg">—</td></tr>
+                <tr class="lm-total-row"><td>合計</td><td id="lm-m-total-cnt">—</td><td id="lm-m-total-cr">—</td><td id="lm-m-ratio" class="lm-ratio">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="roi-group-label">佐藤</div>
+          <div class="lm-person-block" style="margin-bottom:24px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px">
+              <div class="fld"><div class="fld-num">base</div><div class="fld-label">移管（cr）<span style="font-size:11px;color:var(--muted)"> ＋受け取り / －渡し</span></div><input type="number" id="lm-s-transfer" placeholder="例: +100 or -100" oninput="computeLm()"></div>
+              <div class="fld calc"><div class="fld-num">実質支給数（自動）</div><div class="fld-label">付与 ± 移管</div><div class="computed blue" id="lm-s-grant" style="font-size:18px"><span class="empty">—</span></div></div>
+            </div>
+            <table class="lm-table">
+              <thead><tr><th></th><th>案件数</th><th>消費数(cr)</th><th>平均単価(自動)</th></tr></thead>
+              <tbody>
+                <tr><td class="lm-type">ヘビー</td><td><input type="number" id="lm-s-h-cnt" placeholder="0" min="0" oninput="computeLm()"></td><td><input type="number" id="lm-s-h-cr" placeholder="0" min="0" oninput="computeLm()"></td><td class="lm-auto" id="lm-s-h-avg">—</td></tr>
+                <tr><td class="lm-type">スタンダード</td><td><input type="number" id="lm-s-s-cnt" placeholder="0" min="0" oninput="computeLm()"></td><td><input type="number" id="lm-s-s-cr" placeholder="0" min="0" oninput="computeLm()"></td><td class="lm-auto" id="lm-s-s-avg">—</td></tr>
+                <tr><td class="lm-type">ライト</td><td><input type="number" id="lm-s-l-cnt" placeholder="0" min="0" oninput="computeLm()"></td><td><input type="number" id="lm-s-l-cr" placeholder="0" min="0" oninput="computeLm()"></td><td class="lm-auto" id="lm-s-l-avg">—</td></tr>
+                <tr class="lm-total-row"><td>合計</td><td id="lm-s-total-cnt">—</td><td id="lm-s-total-cr">—</td><td id="lm-s-ratio" class="lm-ratio">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="roi-group-label">傾向・所感</div>
+          <textarea id="lm-memo" placeholder="今月の傾向や気づきを記入" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:300;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px"></textarea>
+        </div>
+      </div>
     </div>
 
     <div class="save-bar">
@@ -400,6 +460,10 @@ td input::placeholder{color:var(--dim)}
     <div class="sec">
       <div class="sec-hdr"><span class="sec-tag tag-ai">大石</span><span class="sec-title">UI AI検証ログ</span></div>
       <div class="accum-table-wrap"><div id="accum-ai-oishi"></div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-a">中村 記録</span><span class="sec-title">Layermate クレジットモニタリング</span></div>
+      <div class="accum-table-wrap"><div id="accum-lm"></div></div>
     </div>
   </div>
 </div>
@@ -465,6 +529,8 @@ async function loadFields(){
       bindRoi();
     } else {
       ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
+    LM_IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
+    computeLm();
       const wrap=document.getElementById('ai-entries');wrap.innerHTML='';
       const entries=d['a-entries']||[{}];entries.forEach(addAiEntry);if(!entries.length)addAiEntry({});
       bindAi();
@@ -488,6 +554,8 @@ async function doSave(){
     d['r-ai-log']=rows;
   } else {
     ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
+    // Layermate
+    LM_IDS.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
     const entries=[];
     document.querySelectorAll('.ai-entry').forEach(card=>{
       entries.push({content:card.querySelector('.ae-content')?.value||'',time:card.querySelector('.ae-time')?.value||''});
@@ -648,7 +716,48 @@ function bindAi(){
 new MutationObserver(bindRoi).observe(document.getElementById('r-ai-body'),{childList:true});
 new MutationObserver(()=>bindAi()).observe(document.getElementById('ai-entries'),{childList:true,subtree:true});
 
-// ── ビュー切り替え ──
+// ── Layermate計算 ──
+const LM_IDS=['lm-grant','lm-m-transfer','lm-m-h-cnt','lm-m-h-cr','lm-m-s-cnt','lm-m-s-cr','lm-m-l-cnt','lm-m-l-cr','lm-s-transfer','lm-s-h-cnt','lm-s-h-cr','lm-s-s-cnt','lm-s-s-cr','lm-s-l-cnt','lm-s-l-cr','lm-memo'];
+function computeLm(){
+  const grant=nv('lm-grant');
+  const calc=(prefix)=>{
+    const transfer=parseFloat(document.getElementById(prefix+'-transfer')?.value)||0;
+    const realGrant=grant+transfer;
+    const hCnt=nv(prefix+'-h-cnt'),hCr=nv(prefix+'-h-cr');
+    const sCnt=nv(prefix+'-s-cnt'),sCr=nv(prefix+'-s-cr');
+    const lCnt=nv(prefix+'-l-cnt'),lCr=nv(prefix+'-l-cr');
+    const totalCnt=hCnt+sCnt+lCnt,totalCr=hCr+sCr+lCr;
+    const ratio=realGrant>0?totalCr/realGrant*100:null;
+    const el=document.getElementById(prefix.replace('lm-','lm-c-').replace('-','')+'grant')||document.getElementById(prefix.replace('lm-m','lm-m-grant').replace('lm-s','lm-s-grant'));
+    // update real grant
+    const gEl=document.getElementById(prefix==='lm-m'?'lm-m-grant':'lm-s-grant');
+    if(gEl){gEl.className='computed blue';gEl.textContent=grant?realGrant+'cr':'—';}
+    // avg unit prices
+    const setAvg=(id,cnt,cr)=>{const e=document.getElementById(id);if(e)e.textContent=cnt>0?(cr/cnt).toFixed(1)+'cr':'—';};
+    setAvg(prefix+'-h-avg',hCnt,hCr);
+    setAvg(prefix+'-s-avg',sCnt,sCr);
+    setAvg(prefix+'-l-avg',lCnt,lCr);
+    // totals
+    const tcEl=document.getElementById(prefix+'-total-cnt');if(tcEl)tcEl.textContent=totalCnt||'—';
+    const tcrEl=document.getElementById(prefix+'-total-cr');if(tcrEl)tcrEl.textContent=totalCr?totalCr+'cr':'—';
+    const rEl=document.getElementById(prefix+'-ratio');
+    if(rEl){
+      rEl.textContent=ratio!==null?ratio.toFixed(1)+'%':'—';
+      rEl.style.color=ratio===null?'':ratio>90?'var(--accent3)':ratio>70?'var(--accent4)':'var(--accent2)';
+    }
+    return{totalCr,realGrant};
+  };
+  const m=calc('lm-m');const s=calc('lm-s');
+  const totalEl=document.getElementById('lm-c-total-ratio');
+  if(totalEl){
+    const totalGrant=(m.realGrant||0)+(s.realGrant||0);
+    const totalRatio=totalGrant>0?(m.totalCr+s.totalCr)/totalGrant*100:null;
+    totalEl.className='computed '+(totalRatio===null?'':(totalRatio>90?'red':totalRatio>70?'yellow':'green'));
+    totalEl.textContent=totalRatio!==null?totalRatio.toFixed(1)+'%':'—';
+  }
+}
+
+
 function switchView(v){
   document.getElementById('input-view').style.display=v==='input'?'':'none';
   document.getElementById('accum-view').style.display=v==='accum'?'':'none';
@@ -662,6 +771,7 @@ async function renderAccum(){
   document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込み中...</div>';
   document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込み中...</div>';
   document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込み中...</div>';
+  document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込み中...</div>';
   try{
     const snap=await db.collection('dashboard').get();
     const allDocs=[];
@@ -730,10 +840,46 @@ async function renderAccum(){
         <thead><tr><th>月</th><th>検証時間合計</th><th>検証比率</th><th>調査内容</th></tr></thead>
         <tbody>${rows}</tbody></table>`;
     });
+
+    // Layermateモニタリング
+    const lmDocs=allDocs.filter(d=>d._user==='中村'&&d['lm-grant']).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
+    const lmWrap=document.getElementById('accum-lm');
+    if(!lmDocs.length){lmWrap.innerHTML='<div class="no-data">まだデータがありません</div>';}
+    else{
+      const lmRows=lmDocs.map(d=>{
+        const grant=parseFloat(d['lm-grant'])||0;
+        const mTransfer=parseFloat(d['lm-m-transfer'])||0;
+        const sTransfer=parseFloat(d['lm-s-transfer'])||0;
+        const mGrant=grant+mTransfer, sGrant=grant+sTransfer;
+        const mCr=(parseFloat(d['lm-m-h-cr'])||0)+(parseFloat(d['lm-m-s-cr'])||0)+(parseFloat(d['lm-m-l-cr'])||0);
+        const sCr=(parseFloat(d['lm-s-h-cr'])||0)+(parseFloat(d['lm-s-s-cr'])||0)+(parseFloat(d['lm-s-l-cr'])||0);
+        const mRatio=mGrant>0?mCr/mGrant*100:null;
+        const sRatio=sGrant>0?sCr/sGrant*100:null;
+        const mCnt=(parseFloat(d['lm-m-h-cnt'])||0)+(parseFloat(d['lm-m-s-cnt'])||0)+(parseFloat(d['lm-m-l-cnt'])||0);
+        const sCnt=(parseFloat(d['lm-s-h-cnt'])||0)+(parseFloat(d['lm-s-s-cnt'])||0)+(parseFloat(d['lm-s-l-cnt'])||0);
+        const rc=(r)=>r===null?'':(r>90?'col-neg':r>70?'col-warn':'col-pos');
+        return`<tr>
+          <td class="col-month">${monthLabel(d._month)}</td>
+          <td>${grant?grant+'cr':'—'}</td>
+          <td>${mGrant+'cr'}${mTransfer?` (${mTransfer>0?'+':''}${mTransfer})`:''}</td>
+          <td>${mCnt||'—'}</td><td>${mCr?mCr+'cr':'—'}</td>
+          <td class="${rc(mRatio)}">${mRatio!==null?mRatio.toFixed(1)+'%':'—'}</td>
+          <td>${sGrant+'cr'}${sTransfer?` (${sTransfer>0?'+':''}${sTransfer})`:''}</td>
+          <td>${sCnt||'—'}</td><td>${sCr?sCr+'cr':'—'}</td>
+          <td class="${rc(sRatio)}">${sRatio!==null?sRatio.toFixed(1)+'%':'—'}</td>
+          <td style="white-space:normal;max-width:200px;line-height:1.6">${d['lm-memo']||'—'}</td>
+        </tr>`;
+      }).join('');
+      lmWrap.innerHTML=`<table class="accum-table">
+        <thead><tr><th>月</th><th>付与(cr)</th><th>森崎 実質支給</th><th>森崎 案件数</th><th>森崎 消費</th><th>森崎 消費率</th><th>佐藤 実質支給</th><th>佐藤 案件数</th><th>佐藤 消費</th><th>佐藤 消費率</th><th>傾向・所感</th></tr></thead>
+        <tbody>${lmRows}</tbody></table>`;
+    }
+
   }catch(e){
     document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込みエラー</div>';
     document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込みエラー</div>';
     document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込みエラー</div>';
+    document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込みエラー</div>';
   }
 }
 </script>
