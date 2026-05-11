@@ -537,6 +537,18 @@ td input::placeholder{color:var(--dim)}
                 </div>
               </div>
               <div class="bar" style="margin-top:8px"><div class="bar-fill" id="lm-bar-total" style="width:0;background:var(--accent2)"></div></div>
+              <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">1案件あたりコスト（自動）</div>
+                  <div class="computed green" id="lm-cost-per-case" style="font-size:22px"><span class="empty">—</span></div>
+                  <div style="font-size:11px;color:var(--dim);margin-top:4px">チームプラン ÷ 総案件数</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">総案件数（自動）</div>
+                  <div class="computed blue" id="lm-total-cases" style="font-size:22px"><span class="empty">—</span></div>
+                  <div style="font-size:11px;color:var(--dim);margin-top:4px">森崎 ＋ 佐藤</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -927,7 +939,7 @@ function computeLm(){
       rEl.textContent=ratio!==null?ratio.toFixed(1)+'%':'—';
       rEl.style.color=ratio===null?'':ratio>90?'var(--accent3)':ratio>70?'var(--accent4)':'var(--accent2)';
     }
-    return{totalCr,realGrant,ratio};
+    return{totalCr,realGrant,ratio,totalCnt};
   };
   const m=calc('lm-m');const s=calc('lm-s');
   // bars
@@ -954,17 +966,35 @@ function computeLm(){
     totalEl.className='computed '+(totalRatio===null?'':(totalRatio>90?'red':totalRatio>70?'yellow':'green'));
     totalEl.textContent=totalRatio!==null?totalRatio.toFixed(1)+'%':'—';
     const totalYenEl=document.getElementById('lm-c-total-yen');
-    const unitPrice=nv('lm-unit-price');
     if(totalYenEl){totalYenEl.textContent=unitPrice?'チームプラン ¥'+Math.round(unitPrice).toLocaleString()+'（税込）':'—';}
+    // 費用対効果
+    const totalCases=(m.totalCnt||0)+(s.totalCnt||0);
+    const costPerCase=totalCases>0&&unitPrice?unitPrice/totalCases:null;
+    const cpcEl=document.getElementById('lm-cost-per-case');
+    if(cpcEl){
+      if(costPerCase!==null){cpcEl.className='computed green';cpcEl.textContent='¥'+Math.round(costPerCase).toLocaleString();}
+      else cpcEl.innerHTML='<span class="empty">—</span>';
+    }
+    const tcEl=document.getElementById('lm-total-cases');
+    if(tcEl){
+      if(totalCases>0){tcEl.className='computed blue';tcEl.textContent=totalCases+'件';}
+      else tcEl.innerHTML='<span class="empty">—</span>';
+    }
   }
 }
 
-function renderLmTabs(){
+async function renderLmTabs(){
   const nav=document.getElementById('lm-month-nav');if(!nav)return;
+  let savedMonths=new Set();
+  try{
+    const snap=await db.collection('layermate').get();
+    snap.forEach(doc=>{const d=doc.data();if(d._month)savedMonths.add(d._month);});
+  }catch(e){}
   nav.innerHTML='';
   MONTHS.forEach((m,i)=>{
     const btn=document.createElement('button');
     btn.className='mtab'+(i===lmMonth?' active':'');
+    if(savedMonths.has(MKEYS[i]))btn.classList.add('has-data');
     btn.textContent=m;
     btn.onclick=()=>{lmMonth=i;renderLmTabs();loadLmFields();};
     nav.appendChild(btn);
@@ -994,12 +1024,13 @@ async function doSaveLm(){
     await db.collection('layermate').doc(lmDocKey()).set(d);
     s.textContent='保存済み ✓';s.className='save-status saved';
     setTimeout(()=>{s.textContent='未保存';s.className='save-status';},2500);
-  }catch(e){s.textContent='保存エラー';s.className='save-status';}
+    renderLmTabs();
+  }catch(e){s.textContent='保存エラー: '+e.message;s.className='save-status';console.error('Layermate保存エラー:',e);}
 }
 
 async function clearLmMonth(){
   if(!confirm('この月のLayermateデータをリセットしますか？'))return;
-  try{await db.collection('layermate').doc(lmDocKey()).delete();loadLmFields();}catch(e){}
+  try{await db.collection('layermate').doc(lmDocKey()).delete();loadLmFields();renderLmTabs();}catch(e){}
 }
 
 
