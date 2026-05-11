@@ -483,15 +483,15 @@ td input::placeholder{color:var(--dim)}
 <!-- ツール入力画面 -->
 <div id="tool-screen" style="display:none">
   <div style="max-width:1080px;margin:0 auto;padding:32px 24px 0">
-    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:0">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:1.5rem">
       <div>
         <p style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Reel Production</p>
         <h1 id="tool-screen-title" style="font-family:'DM Mono',monospace;font-size:20px">ツールモニタリング</h1>
       </div>
       <button class="btn-logout" onclick="backToToolHub()">← ツール一覧に戻る</button>
     </div>
+    <div class="mtabs" id="lm-month-nav"></div>
   </div>
-  <div class="mtabs" id="lm-month-nav" style="max-width:1080px;margin:1.5rem auto;padding:0 24px"></div>
 
   <div style="max-width:1080px;margin:0 auto;padding:0 24px">
     <!-- Layermate -->
@@ -671,7 +671,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-let lmMonth=0;
+let lmMonth = 0;
 
 // ── 定数 ──
 const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
@@ -901,8 +901,8 @@ function bindRoi(){
 function bindAi(){
   document.querySelectorAll('#ai-ui input,#ai-ui textarea').forEach(e=>{if(!e._b){e._b=true;e.addEventListener('input',computeAi);}});
 }
-new MutationObserver(bindRoi).observe(document.getElementById('r-ai-body'),{childList:true});
-new MutationObserver(()=>bindAi()).observe(document.getElementById('ai-entries'),{childList:true,subtree:true});
+const _rAiBody=document.getElementById('r-ai-body');if(_rAiBody)new MutationObserver(bindRoi).observe(_rAiBody,{childList:true});
+const _aiEntries=document.getElementById('ai-entries');if(_aiEntries)new MutationObserver(()=>bindAi()).observe(_aiEntries,{childList:true,subtree:true});
 
 function syncTransfer(){
   const mVal=parseFloat(document.getElementById('lm-m-transfer')?.value)||0;
