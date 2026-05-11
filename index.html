@@ -1079,13 +1079,12 @@ async function renderAccum(){
   document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込み中...</div>';
   document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込み中...</div>';
   document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込み中...</div>';
+  // ── dashboard（ROI・AI検証）──
   try{
     const snap=await db.collection('dashboard').get();
     const allDocs=[];
     snap.forEach(doc=>allDocs.push(doc.data()));
 
-    // ROI（小野寺）
-    // 年度計算（4月始まり）
     const now=new Date();
     const fiscalStartYear=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1;
     const monthYear=(mk)=>parseInt(mk)>=4?fiscalStartYear:fiscalStartYear+1;
@@ -1116,7 +1115,6 @@ async function renderAccum(){
         }).join('')}</tbody></table>`;
     }
 
-    // AI検証（中村・大石 別々に表示）
     ['中村','大石'].forEach(name=>{
       const wrapId=name==='中村'?'accum-ai-nakamura':'accum-ai-oishi';
       const wrap=document.getElementById(wrapId);
@@ -1126,11 +1124,9 @@ async function renderAccum(){
         const mi=MKEYS.indexOf(d._month);
         const tw=parseFloat(d['a-total-work'])||0;
         const entries=d['a-entries']||[];
-        // 旧フォーマット(a-verify-h)と新フォーマット(エントリー合計)に両対応
         const entryTotal=entries.reduce((s,e)=>s+(parseFloat(e.time)||0),0);
         const totalVerify=entryTotal>0?entryTotal:(parseFloat(d['a-verify-h'])||0);
         const vr=tw>0&&totalVerify>0?totalVerify/tw*100:null;
-        // 旧フォーマット(tool/prompt/note)と新フォーマット(content)に両対応
         const combined=entries.map((e,i)=>{
           const text=e.content||(([e.tool,e.prompt,e.note].filter(Boolean).join(' / '))||'');
           return text?`<span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
@@ -1147,8 +1143,19 @@ async function renderAccum(){
         <thead><tr><th>月</th><th>検証時間合計</th><th>検証比率</th><th>調査内容</th></tr></thead>
         <tbody>${rows}</tbody></table>`;
     });
+  }catch(e){
+    document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込みエラー</div>';
+    document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込みエラー</div>';
+    document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込みエラー</div>';
+    console.error('dashboard読み込みエラー:',e);
+  }
 
-    // Layermateモニタリング
+  // ── layermate（独立したtry/catch）──
+  try{
+    const now2=new Date();
+    const fiscalStartYear2=now2.getMonth()>=3?now2.getFullYear():now2.getFullYear()-1;
+    const monthYear2=(mk)=>parseInt(mk)>=4?fiscalStartYear2:fiscalStartYear2+1;
+    const monthLabel2=(mk)=>{const mi=MKEYS.indexOf(mk);return `${monthYear2(mk)}年 ${MONTHS[mi]||mk}`;};
     const lmSnap=await db.collection('layermate').get();
     const lmAllDocs=[];lmSnap.forEach(doc=>lmAllDocs.push(doc.data()));
     const lmDocs=lmAllDocs.filter(d=>d['lm-grant']).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
@@ -1168,7 +1175,7 @@ async function renderAccum(){
         const sCnt=(parseFloat(d['lm-s-h-cnt'])||0)+(parseFloat(d['lm-s-s-cnt'])||0)+(parseFloat(d['lm-s-l-cnt'])||0);
         const rc=(r)=>r===null?'':(r>90?'col-neg':r>70?'col-warn':'col-pos');
         return`<tr>
-          <td class="col-month">${monthLabel(d._month)}</td>
+          <td class="col-month">${monthLabel2(d._month)}</td>
           <td>${grant?grant+'cr':'—'}</td>
           <td>${mGrant+'cr'}${mTransfer?` (${mTransfer>0?'+':''}${mTransfer})`:''}</td>
           <td>${mCnt||'—'}</td><td>${mCr?mCr+'cr':'—'}</td>
@@ -1183,12 +1190,9 @@ async function renderAccum(){
         <thead><tr><th>月</th><th>付与(cr)</th><th>森崎 実質支給</th><th>森崎 案件数</th><th>森崎 消費</th><th>森崎 消費率</th><th>佐藤 実質支給</th><th>佐藤 案件数</th><th>佐藤 消費</th><th>佐藤 消費率</th><th>傾向・所感</th></tr></thead>
         <tbody>${lmRows}</tbody></table>`;
     }
-
   }catch(e){
-    document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込みエラー</div>';
-    document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込みエラー</div>';
-    document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込みエラー</div>';
     document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込みエラー</div>';
+    console.error('layermate読み込みエラー:',e);
   }
 }
 </script>
