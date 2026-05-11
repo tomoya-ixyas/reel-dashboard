@@ -162,7 +162,11 @@ td input::placeholder{color:var(--dim)}
 .tool-info{display:flex;flex-direction:column;gap:3px;flex:1}
 .tool-name{font-size:15px;font-weight:500;color:var(--text)}
 .tool-desc{font-size:12px;color:var(--muted)}
-.tool-arrow{font-size:16px;color:var(--muted)}
+.tool-entry-btn{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;width:100%;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.tool-entry-btn:hover{border-color:var(--accent);background:rgba(91,143,255,.06)}
+.tool-entry-icon{font-size:22px}
+.tool-entry-label{font-size:16px;font-weight:500;color:var(--text);flex:1;text-align:left}
+.tool-entry-arrow{font-size:16px;color:var(--muted)}
 
 /* ── Layermateカード ── */
 .lm-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -238,7 +242,8 @@ td input::placeholder{color:var(--dim)}
 <!-- ログイン -->
 <div id="login-screen" style="display:none">
   <div class="login-box" style="max-width:480px">
-    <div class="login-logo">Reel Production</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px">IXYAS クリエイティブ室</div>
+    <h2 style="font-size:18px;font-weight:500;margin-bottom:24px">AI検証モニタリング</h2>
 
     <div class="login-section-label">メンバーとして入る</div>
     <div class="member-grid">
@@ -270,18 +275,12 @@ td input::placeholder{color:var(--dim)}
 
     <div class="login-divider"></div>
 
-    <div class="login-section-label">ツールモニタリング</div>
-    <div class="tool-grid">
-      <button class="tool-btn" onclick="openTool('layermate')">
-        <div class="tool-icon">🔧</div>
-        <div class="tool-info">
-          <span class="tool-name">Layermate</span>
-          <span class="tool-desc">クレジットモニタリング</span>
-        </div>
-        <span class="tool-arrow">→</span>
-      </button>
-      <!-- 今後ツールが増えた場合はここに追加 -->
-    </div>
+    <div class="login-section-label">UIツールモニタリング <span style="font-size:10px;color:var(--dim);letter-spacing:0;text-transform:none;font-weight:300">主に中村・大石が使用</span></div>
+    <button class="tool-entry-btn" onclick="openToolHub()">
+      <span class="tool-entry-icon">🖥</span>
+      <span class="tool-entry-label">UIツールモニタリング</span>
+      <span class="tool-entry-arrow">→</span>
+    </button>
   </div>
 </div>
 
@@ -452,13 +451,36 @@ td input::placeholder{color:var(--dim)}
       <div class="accum-table-wrap"><div id="accum-ai-oishi"></div></div>
     </div>
     <div class="sec">
-      <div class="sec-hdr"><span class="sec-tag tag-a">中村 記録</span><span class="sec-title">Layermate クレジットモニタリング</span></div>
+      <div class="sec-hdr"><span class="sec-tag tag-a">Layermate</span><span class="sec-title">クレジットモニタリング</span></div>
       <div class="accum-table-wrap"><div id="accum-lm"></div></div>
     </div>
   </div>
 </div>
 
-<!-- ツール画面（独立） -->
+<!-- ツール一覧ページ -->
+<div id="tool-hub" style="display:none">
+  <div style="max-width:480px;margin:0 auto;padding:60px 24px 0">
+    <div style="margin-bottom:2rem">
+      <button onclick="backToLogin()" style="background:transparent;border:none;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px">← ログイン画面に戻る</button>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">IXYAS クリエイティブ室</div>
+    <h2 style="font-size:20px;font-weight:500;margin-bottom:6px">UIツールモニタリング</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6">検証・運用中のUIツールを選択してください<br><span style="font-size:11px;color:var(--dim)">主に中村・大石が記録を担当します</span></p>
+    <div style="display:flex;flex-direction:column;gap:10px" id="tool-hub-list">
+      <button class="tool-btn" onclick="openTool('layermate')">
+        <div class="tool-icon">🔧</div>
+        <div class="tool-info">
+          <span class="tool-name">Layermate</span>
+          <span class="tool-desc">クレジットモニタリング</span>
+        </div>
+        <span class="tool-arrow">→</span>
+      </button>
+      <!-- ツールが増えた場合はここに tool-btn を追加 -->
+    </div>
+  </div>
+</div>
+
+<!-- ツール入力画面 -->
 <div id="tool-screen" style="display:none">
   <div style="max-width:1080px;margin:0 auto;padding:32px 24px 0">
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:1.5rem">
@@ -466,7 +488,7 @@ td input::placeholder{color:var(--dim)}
         <p style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Reel Production</p>
         <h1 id="tool-screen-title" style="font-family:'DM Mono',monospace;font-size:20px">ツールモニタリング</h1>
       </div>
-      <button class="btn-logout" onclick="backToLogin()">← ログイン画面に戻る</button>
+      <button class="btn-logout" onclick="backToToolHub()">← ツール一覧に戻る</button>
     </div>
     <div class="mtabs" id="lm-month-nav"></div>
   </div>
@@ -485,15 +507,36 @@ td input::placeholder{color:var(--dim)}
               <div class="fld-num">月次付与クレジット（共通）</div>
               <div class="fld-label">森崎・佐藤それぞれへの付与量</div>
               <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-                <input type="number" id="lm-grant" placeholder="例: 500" oninput="computeLm()" style="max-width:140px">
+                <input type="number" id="lm-grant" placeholder="例: 500" oninput="computeLm()" onchange="computeLm()" style="max-width:120px">
                 <span style="font-size:15px;color:var(--muted)">cr / 人</span>
               </div>
+              <div class="fld-label" style="margin-top:12px">チームプラン月額（税込）</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+                <input type="number" id="lm-unit-price" placeholder="49500" oninput="computeLm()" onchange="computeLm()" style="max-width:120px">
+                <span style="font-size:15px;color:var(--muted)">円</span>
+              </div>
+              <div style="font-size:11px;color:var(--dim);margin-top:6px">チームプラン固定費・プラン変更時のみ更新</div>
             </div>
             <div class="fld calc" style="grid-column:span 2">
-              <div class="fld-num">合計消費割合（自動）</div>
-              <div class="fld-label">（森崎消費 ＋ 佐藤消費）÷（付与×2）</div>
-              <div class="computed" id="lm-c-total-ratio" style="font-size:28px"><span class="empty">入力待ち</span></div>
-              <div class="bar"><div class="bar-fill" id="lm-bar-total" style="width:0;background:var(--accent2)"></div></div>
+              <div class="fld-num">合計サマリー（自動）</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:8px">
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">森崎 消費</div>
+                  <div class="computed yellow" id="lm-s-total-m" style="font-size:18px">—</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:4px" id="lm-s-total-m-yen">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">佐藤 消費</div>
+                  <div class="computed yellow" id="lm-s-total-s" style="font-size:18px">—</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:4px" id="lm-s-total-s-yen">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:4px">合計消費割合</div>
+                  <div class="computed" id="lm-c-total-ratio" style="font-size:22px"><span class="empty">—</span></div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:4px" id="lm-c-total-yen">—</div>
+                </div>
+              </div>
+              <div class="bar" style="margin-top:8px"><div class="bar-fill" id="lm-bar-total" style="width:0;background:var(--accent2)"></div></div>
             </div>
           </div>
 
@@ -510,7 +553,7 @@ td input::placeholder{color:var(--dim)}
               <div class="lm-card-body">
                 <div class="lm-transfer-row">
                   <span class="lm-row-label">移管（cr）</span>
-                  <input type="number" id="lm-m-transfer" placeholder="＋受け取り / −渡し" oninput="computeLm()">
+                  <input type="number" id="lm-m-transfer" placeholder="＋受け取り / −渡し" oninput="syncTransfer()" onchange="syncTransfer()">
                 </div>
                 <div class="lm-divider"></div>
                 <div class="lm-type-row"><span class="lm-type-label">ヘビー</span>
@@ -555,7 +598,8 @@ td input::placeholder{color:var(--dim)}
               <div class="lm-card-body">
                 <div class="lm-transfer-row">
                   <span class="lm-row-label">移管（cr）</span>
-                  <input type="number" id="lm-s-transfer" placeholder="＋受け取り / −渡し" oninput="computeLm()">
+                  <input type="number" id="lm-s-transfer" placeholder="自動計算" readonly style="color:var(--accent4);background:rgba(255,209,102,.06);cursor:default">
+                  <span style="font-size:11px;color:var(--dim)">森崎と連動</span>
                 </div>
                 <div class="lm-divider"></div>
                 <div class="lm-type-row"><span class="lm-type-label">ヘビー</span>
@@ -847,8 +891,15 @@ function bindAi(){
 new MutationObserver(bindRoi).observe(document.getElementById('r-ai-body'),{childList:true});
 new MutationObserver(()=>bindAi()).observe(document.getElementById('ai-entries'),{childList:true,subtree:true});
 
+function syncTransfer(){
+  const mVal=parseFloat(document.getElementById('lm-m-transfer')?.value)||0;
+  const sEl=document.getElementById('lm-s-transfer');
+  if(sEl)sEl.value=mVal!==0?-mVal:'';
+  computeLm();
+}
+
 // ── Layermate計算 ──
-const LM_IDS=['lm-grant','lm-m-transfer','lm-m-h-cnt','lm-m-h-cr','lm-m-s-cnt','lm-m-s-cr','lm-m-l-cnt','lm-m-l-cr','lm-s-transfer','lm-s-h-cnt','lm-s-h-cr','lm-s-s-cnt','lm-s-s-cr','lm-s-l-cnt','lm-s-l-cr','lm-memo'];
+const LM_IDS=['lm-grant','lm-unit-price','lm-m-transfer','lm-m-h-cnt','lm-m-h-cr','lm-m-s-cnt','lm-m-s-cr','lm-m-l-cnt','lm-m-l-cr','lm-s-transfer','lm-s-h-cnt','lm-s-h-cr','lm-s-s-cnt','lm-s-s-cr','lm-s-l-cnt','lm-s-l-cr','lm-memo'];
 function computeLm(){
   const grant=nv('lm-grant');
   const calc=(prefix)=>{
@@ -884,6 +935,16 @@ function computeLm(){
   if(bm){const c=m.ratio===null?'var(--accent2)':(m.ratio>90?'var(--accent3)':m.ratio>70?'var(--accent4)':'var(--accent2)');bm.style.width=m.ratio!==null?Math.min(m.ratio,100)+'%':'0';bm.style.background=c;}
   const bs=document.getElementById('lm-bar-s');
   if(bs){const c=s.ratio===null?'var(--accent2)':(s.ratio>90?'var(--accent3)':s.ratio>70?'var(--accent4)':'var(--accent2)');bs.style.width=s.ratio!==null?Math.min(s.ratio,100)+'%':'0';bs.style.background=c;}
+  // サマリー更新
+  const unitPrice=nv('lm-unit-price');
+  const sm=document.getElementById('lm-s-total-m');
+  if(sm){sm.textContent=m.totalCr?m.totalCr+'cr':'—';}
+  const smY=document.getElementById('lm-s-total-m-yen');
+  if(smY){smY.textContent='';}
+  const ss=document.getElementById('lm-s-total-s');
+  if(ss){ss.textContent=s.totalCr?s.totalCr+'cr':'—';}
+  const ssY=document.getElementById('lm-s-total-s-yen');
+  if(ssY){ssY.textContent='';}
   const totalEl=document.getElementById('lm-c-total-ratio');
   if(totalEl){
     const totalGrant=(m.realGrant||0)+(s.realGrant||0);
@@ -892,6 +953,9 @@ function computeLm(){
     if(bt){const c=totalRatio===null?'var(--accent2)':(totalRatio>90?'var(--accent3)':totalRatio>70?'var(--accent4)':'var(--accent2)');bt.style.width=totalRatio!==null?Math.min(totalRatio,100)+'%':'0';bt.style.background=c;}
     totalEl.className='computed '+(totalRatio===null?'':(totalRatio>90?'red':totalRatio>70?'yellow':'green'));
     totalEl.textContent=totalRatio!==null?totalRatio.toFixed(1)+'%':'—';
+    const totalYenEl=document.getElementById('lm-c-total-yen');
+    const unitPrice=nv('lm-unit-price');
+    if(totalYenEl){totalYenEl.textContent=unitPrice?'チームプラン ¥'+Math.round(unitPrice).toLocaleString()+'（税込）':'—';}
   }
 }
 
@@ -914,6 +978,9 @@ async function loadLmFields(){
     const snap=await db.collection('layermate').doc(lmDocKey()).get();
     const d=snap.exists?snap.data():{};
     LM_IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
+    // チームプランのデフォルト値
+    const priceEl=document.getElementById('lm-unit-price');
+    if(priceEl&&!priceEl.value)priceEl.value='49500';
     computeLm();
   }catch(e){}
 }
@@ -946,16 +1013,27 @@ function switchView(v){
   if(v==='accum')renderAccum();
 }
 
-function openTool(toolId){
+function openToolHub(){
   document.getElementById('login-screen').style.display='none';
-  document.getElementById('main-screen').style.display='none';
+  document.getElementById('tool-hub').style.display='';
+}
+
+function openTool(toolId){
+  document.getElementById('tool-hub').style.display='none';
   document.getElementById('tool-screen').style.display='';
   document.getElementById('tool-screen-title').textContent=toolId==='layermate'?'Layermate モニタリング':'ツールモニタリング';
   renderLmTabs();loadLmFields();
 }
 
+function backToToolHub(){
+  document.getElementById('tool-screen').style.display='none';
+  document.getElementById('tool-hub').style.display='';
+}
+
 function backToLogin(){
   document.getElementById('tool-screen').style.display='none';
+  document.getElementById('tool-hub').style.display='none';
+  document.getElementById('main-screen').style.display='none';
   document.getElementById('login-screen').style.display='flex';
 }
 
