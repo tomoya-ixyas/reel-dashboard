@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リール動画制作 月次ダッシュボード</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#0e0f11; --surface:#16181d; --surface2:#1e2028; --border:#2a2d38;
+  --accent:#5b8fff; --accent2:#3dffc8; --accent3:#ff6b6b; --accent4:#ffd166;
+  --text:#e8eaf0; --muted:#6b7080; --dim:#3a3d4a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;padding:32px 24px}
+
+/* ── ローディング ── */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:16px}
+.spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{font-size:15px;color:var(--muted)}
+
+/* ── ログイン ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:100}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:420px}
+.login-logo{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.login-box h2{font-size:22px;font-weight:500;margin-bottom:8px}
+.login-box p{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.7}
+.member-grid{display:flex;flex-direction:column;gap:10px}
+.member-btn{display:flex;align-items:center;gap:16px;padding:18px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;width:100%}
+.member-btn:hover{border-color:var(--accent);background:rgba(91,143,255,.06)}
+.mb-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;flex-shrink:0}
+.av-roi{background:rgba(91,143,255,.15);color:var(--accent)}
+.av-ai{background:rgba(255,209,102,.15);color:var(--accent4)}
+.mb-info{display:flex;flex-direction:column;gap:4px;flex:1}
+.mb-name{font-size:17px;font-weight:500;color:var(--text)}
+.mb-role{font-size:13px;color:var(--muted)}
+.mb-badge{font-size:12px;padding:4px 10px;border-radius:20px;font-weight:500;flex-shrink:0}
+.badge-roi{background:rgba(91,143,255,.15);color:var(--accent)}
+.badge-ai{background:rgba(255,209,102,.12);color:var(--accent4)}
+
+/* ── ヘッダー ── */
+header{max-width:1080px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px}
+.hdr-left p{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.hdr-left h1{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:-.02em}
+.hdr-right{display:flex;gap:10px;align-items:center}
+.user-pill{font-size:14px;font-weight:400;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:7px 16px;display:flex;align-items:center;gap:8px}
+.role-badge{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:500}
+.btn-logout{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:7px 16px;cursor:pointer;transition:all .15s}
+.btn-logout:hover{border-color:var(--accent3);color:var(--accent3)}
+
+/* ── ビュータブ ── */
+.vtabs{max-width:1080px;margin:0 auto 1.5rem;display:flex;gap:2px;border-bottom:1px solid var(--border)}
+.vtab{font-size:15px;padding:12px 22px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.vtab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── 月タブ ── */
+.mtabs{max-width:1080px;margin:0 auto 1.5rem;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtab{flex-shrink:0;font-family:'DM Mono',monospace;font-size:13px;padding:8px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.mtab:hover{border-color:var(--accent);color:var(--accent)}
+.mtab.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
+.mtab.has-data::after{content:'●';font-size:7px;margin-left:5px;vertical-align:3px}
+
+main{max-width:1080px;margin:0 auto}
+
+/* ── サマリー帯 ── */
+.summary{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden;display:grid}
+.summary.cols5{grid-template-columns:repeat(5,1fr)}
+.summary.cols3{grid-template-columns:repeat(3,1fr)}
+.si{padding:1.5rem;border-right:1px solid var(--border)}
+.si:last-child{border-right:none}
+.si-label{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
+.si-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+.si-val.blue{color:var(--accent)} .si-val.green{color:var(--accent2)} .si-val.yellow{color:var(--accent4)} .si-val.red{color:var(--accent3)}
+
+/* ── セクション ── */
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden}
+.sec-hdr{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sec-tag{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:4px 10px;border-radius:4px;letter-spacing:.06em}
+.tag-a{background:rgba(91,143,255,.15);color:var(--accent)}
+.tag-b{background:rgba(61,255,200,.12);color:var(--accent2)}
+.tag-ai{background:rgba(255,209,102,.12);color:var(--accent4)}
+.sec-title{font-size:15px;font-weight:500}
+.sec-body{padding:24px}
+
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.fld{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.fld.calc{border-color:rgba(91,143,255,.3);background:rgba(91,143,255,.04)}
+.fld.hl{border-color:rgba(61,255,200,.25);background:rgba(61,255,200,.04)}
+.fld-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.1em}
+.fld-label{font-size:13px;color:var(--muted);line-height:1.5}
+.fld input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:10px 14px;width:100%;outline:none;transition:border-color .15s}
+.fld input:focus{border-color:var(--accent)}
+.fld input::placeholder{color:var(--dim)}
+.fld input.sub{font-size:14px;margin-top:4px}
+.unit{font-size:13px;color:var(--muted)}
+.computed{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;min-height:38px;display:flex;align-items:center;color:var(--accent)}
+.computed.green{color:var(--accent2)} .computed.red{color:var(--accent3)} .computed.yellow{color:var(--accent4)}
+.computed .empty{font-size:15px;font-weight:300;color:var(--dim)}
+.bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:2px}
+.bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+
+.memo-wrap{padding:0 24px 24px}
+.memo-label{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
+.memo-wrap textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:300;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px}
+.memo-wrap textarea:focus{border-color:var(--accent2)}
+.memo-wrap textarea::placeholder{color:var(--dim)}
+
+.ai-table-wrap{padding:0 24px 24px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
+td{padding:10px 12px;border-bottom:1px solid var(--dim)}
+tr:last-child td{border-bottom:none}
+td input,td select{background:transparent;border:none;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;width:100%;outline:none}
+td input::placeholder{color:var(--dim)}
+.add-row-btn{width:100%;margin-top:10px;border:1px dashed var(--border);border-radius:6px;background:transparent;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:14px;padding:10px;cursor:pointer;transition:all .15s}
+.add-row-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── AI検証エントリー ── */
+.ai-entries-wrap{padding:0 24px 24px;display:flex;flex-direction:column;gap:12px}
+.ai-entry{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px}
+.ae-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
+.ae-field{display:flex;flex-direction:column;gap:6px}
+.ae-label{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.ae-field input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP',sans-serif}
+.ae-field input::placeholder{color:var(--dim)}
+.ae-field textarea{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP',sans-serif;resize:vertical;min-height:64px;line-height:1.6}
+.ae-field textarea::placeholder{color:var(--dim)}
+
+/* ── 保存バー ── */
+.save-bar{max-width:1080px;margin:.75rem auto 0;display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.save-status{font-family:'DM Mono',monospace;font-size:13px;color:var(--dim);transition:color .3s}
+.save-status.saved{color:var(--accent2)}
+.save-status.saving{color:var(--accent4)}
+.btn-save{background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;cursor:pointer;transition:opacity .15s}
+.btn-save:hover{opacity:.85}
+.btn-clear{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:14px;padding:12px 18px;cursor:pointer;transition:all .15s}
+.btn-clear:hover{border-color:var(--accent3);color:var(--accent3)}
+
+/* ── 蓄積データ ── */
+.accum-table-wrap{padding:24px;overflow-x:auto}
+.accum-table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}
+.accum-table th{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
+.accum-table td{padding:12px 16px;border-bottom:1px solid var(--dim);font-family:'DM Mono',monospace;font-size:14px}
+.accum-table tr:last-child td{border-bottom:none}
+.accum-table tr:hover td{background:rgba(255,255,255,.02)}
+.col-month{color:var(--accent);font-weight:500}
+.col-pos{color:var(--accent2)} .col-neg{color:var(--accent3)} .col-warn{color:var(--accent4)}
+.no-data{padding:3rem;text-align:center;color:var(--dim);font-size:15px}
+
+/* ── AI検証サマリーバー ── */
+.ai-summary-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;padding:0;display:flex;align-items:stretch;overflow:hidden}
+.ai-sb-item{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:8px;flex:1}
+.ai-sb-item-wide{flex:1.5}
+.ai-sb-divider{width:1px;background:var(--border);flex-shrink:0}
+.ai-sb-label{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.ai-sb-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+.ai-sb-val.blue{color:var(--accent)}
+.ai-sb-val.yellow{color:var(--accent4)}
+.ai-sb-val.green{color:var(--accent2)}
+.ai-sb-val.red{color:var(--accent3)}
+
+/* ── AI検証エントリーカード ── */
+.ai-entry{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent4);border-radius:10px;overflow:hidden}
+.ae-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.ae-entry-label{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--accent4);letter-spacing:.08em}
+.ae-time-row{display:flex;align-items:center;gap:12px}
+.ae-time-label{font-size:14px;color:var(--muted);white-space:nowrap}
+.ae-time{width:100px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:18px;font-weight:500;padding:10px 14px;outline:none}
+.ae-time:focus{border-color:var(--accent)}
+.ae-time-unit{font-size:14px;color:var(--muted)}
+.ae-field-label{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.ae-body textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:300;line-height:1.7;padding:10px 14px;resize:vertical;outline:none;min-height:90px}
+.ae-body textarea:focus{border-color:var(--accent2)}
+.ae-body textarea::placeholder{color:var(--dim)}
+.roi-group-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
+
+/* ── コスト内訳テーブル ── */
+.cost-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ct-head{display:grid;grid-template-columns:160px 1fr 1fr 1fr;background:var(--surface2);padding:10px 16px;gap:12px}
+.ct-head div{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.ct-row{display:grid;grid-template-columns:160px 1fr 1fr 1fr;padding:14px 16px;gap:12px;border-top:1px solid var(--border);align-items:center}
+.ct-row:hover{background:rgba(255,255,255,.015)}
+.ct-person{font-size:15px;font-weight:500;color:var(--text)}
+.ct-ref{font-size:12px;color:var(--dim);padding-top:4px}
+.ct-auto{display:flex;flex-direction:column}
+.ct-row input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;padding:8px 12px;width:100%;outline:none;transition:border-color .15s}
+.ct-row input:focus{border-color:var(--accent)}
+.ct-row input::placeholder{color:var(--dim)}
+</style>
+</head>
+<body>
+
+<!-- ローディング -->
+<div id="loading">
+  <div class="spinner"></div>
+  <p>接続中...</p>
+</div>
+
+<!-- ログイン -->
+<div id="login-screen" style="display:none">
+  <div class="login-box">
+    <div class="login-logo">Reel Production</div>
+    <h2>だれですか？</h2>
+    <p>名前を選んでログインしてください。<br>データはチーム全員でリアルタイム共有されます。</p>
+    <div class="member-grid">
+      <button class="member-btn" onclick="doLogin('小野寺','roi')">
+        <div class="mb-av av-roi">小</div>
+        <div class="mb-info">
+          <span class="mb-name">小野寺</span>
+          <span class="mb-role">動画制作・ROIモニタリング担当</span>
+        </div>
+        <span class="mb-badge badge-roi">動画 ROI担当</span>
+      </button>
+      <button class="member-btn" onclick="doLogin('中村','ai')">
+        <div class="mb-av av-ai">中</div>
+        <div class="mb-info">
+          <span class="mb-name">中村</span>
+          <span class="mb-role">UI・AIツール検証担当</span>
+        </div>
+        <span class="mb-badge badge-ai">UI AI検証担当</span>
+      </button>
+      <button class="member-btn" onclick="doLogin('大石','ai')">
+        <div class="mb-av av-ai">大</div>
+        <div class="mb-info">
+          <span class="mb-name">大石</span>
+          <span class="mb-role">UI・AIツール検証担当</span>
+        </div>
+        <span class="mb-badge badge-ai">UI AI検証担当</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- メイン -->
+<div id="main-screen" style="display:none">
+  <header>
+    <div class="hdr-left">
+      <p>Reel Production</p>
+      <h1>月次 ROI ダッシュボード</h1>
+    </div>
+    <div class="hdr-right">
+      <div class="user-pill">
+        <div id="hdr-av" style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600"></div>
+        <span id="disp-user">—</span>
+        <span class="role-badge" id="role-badge">—</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">ログアウト</button>
+    </div>
+  </header>
+
+  <div class="vtabs">
+    <button class="vtab active" id="vtab-input" onclick="switchView('input')">自分の入力</button>
+    <button class="vtab" id="vtab-accum" onclick="switchView('accum')">蓄積データ（全員分）</button>
+  </div>
+
+  <div id="input-view">
+    <div class="mtabs" id="month-nav"></div>
+
+    <!-- ROI担当（小野寺）-->
+    <div id="roi-ui">
+      <div class="summary cols5">
+        <div class="si"><div class="si-label">① 制作時間合計</div><div class="si-val blue" id="s1">—</div></div>
+        <div class="si"><div class="si-label">② 1本あたり</div><div class="si-val blue" id="s2">—</div></div>
+        <div class="si"><div class="si-label">③ Firefly/本</div><div class="si-val yellow" id="s3">—</div></div>
+        <div class="si"><div class="si-label">④ 粗利</div><div class="si-val" id="s4">—</div></div>
+        <div class="si"><div class="si-label">⑤ 検証比率</div><div class="si-val" id="s5">—</div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hdr"><span class="sec-tag tag-a">ROI-A</span><span class="sec-title">コスト算出</span></div>
+        <div class="sec-body">
+
+          <!-- 制作実績 -->
+          <div class="roi-group-label">制作実績</div>
+          <div class="g3" style="margin-bottom:24px">
+            <div class="fld"><div class="fld-num">①</div><div class="fld-label">制作時間総数（月合計）</div><input type="number" id="r-total-hours" placeholder="例: 48" min="0" step="0.5"></div>
+            <div class="fld"><div class="fld-num">base</div><div class="fld-label">制作本数 / AI使用本数</div><input type="number" id="r-total-videos" placeholder="本数 例: 8"><input type="number" id="r-ai-videos" class="sub" placeholder="AI使用 例: 5"></div>
+            <div class="fld calc"><div class="fld-num">② 自動計算</div><div class="fld-label">1本あたり制作時間</div><div class="computed" id="r-c-pv"><span class="empty">入力待ち</span></div><div class="bar"><div class="bar-fill" id="r-b1" style="width:0;background:var(--accent)"></div></div></div>
+          </div>
+
+          <!-- コスト内訳 -->
+          <div class="roi-group-label">コスト内訳</div>
+          <div class="cost-table" style="margin-bottom:24px">
+            <div class="ct-head">
+              <div></div>
+              <div>工数単価（円/h）</div>
+              <div>工数（h）</div>
+              <div>コスト（自動）</div>
+            </div>
+            <div class="ct-row">
+              <div class="ct-person">小野寺</div>
+              <div><input type="number" id="r-hourly" placeholder="例: 2500"></div>
+              <div class="ct-ref">制作時間総数と連動</div>
+              <div class="ct-auto"><div class="computed yellow" id="r-c-ono-cost" style="font-size:18px"><span class="empty">—</span></div></div>
+            </div>
+            <div class="ct-row">
+              <div class="ct-person">CS担当<span style="font-size:11px;color:var(--muted);margin-left:6px">（平均）</span></div>
+              <div><input type="number" id="r-cs-hourly" placeholder="例: 2000"></div>
+              <div><input type="number" id="r-cs" placeholder="例: 10" step="0.5"></div>
+              <div class="ct-auto"><div class="computed yellow" id="r-c-cs-cost" style="font-size:18px"><span class="empty">—</span></div></div>
+            </div>
+            <div class="ct-row">
+              <div class="ct-person">Firefly</div>
+              <div><input type="number" id="r-firefly" placeholder="月額 例: 3280"></div>
+              <div class="ct-ref">AI使用本数と連動</div>
+              <div class="ct-auto"><div class="computed yellow" id="r-c-fpv" style="font-size:18px"><span class="empty">—</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">1本あたり</div></div>
+            </div>
+          </div>
+
+          <!-- 収支 -->
+          <div class="roi-group-label">収支</div>
+          <div class="g3" style="margin-bottom:0">
+            <div class="fld"><div class="fld-num">base</div><div class="fld-label">運用代行フィー（月額）</div><input type="number" id="r-fee" placeholder="例: 300000"></div>
+            <div class="fld calc"><div class="fld-num">制作コスト合計（自動）</div><div class="fld-label">小野寺 ＋ CS ＋ Firefly</div><div class="computed" id="r-c-cost" style="font-size:18px"><span class="empty">—</span></div></div>
+            <div class="fld hl"><div class="fld-num">④ 粗利（自動）</div>
+              <div style="display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap">
+                <div><div class="computed" id="r-c-gross" style="font-size:28px"><span class="empty">入力待ち</span></div></div>
+                <div><div style="font-size:12px;color:var(--muted);margin-bottom:4px">粗利率</div><div class="computed" id="r-c-grate" style="font-size:18px"><span class="empty">—</span></div></div>
+              </div>
+              <div class="bar" style="margin-top:8px"><div class="bar-fill" id="r-b2" style="width:0;background:var(--accent2)"></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-hdr"><span class="sec-tag tag-b">ROI-B</span><span class="sec-title">検証時間の記録</span></div>
+        <div class="sec-body">
+          <div class="g3">
+            <div class="fld"><div class="fld-num">base</div><div class="fld-label">総労働時間（月次）</div><input type="number" id="r-total-work" placeholder="例: 160" step="0.5"></div>
+            <div class="fld"><div class="fld-num">base</div><div class="fld-label">検証にかけた時間（h）</div><input type="number" id="r-verify-h" placeholder="例: 18" step="0.5"></div>
+            <div class="fld calc"><div class="fld-num">⑤</div><div class="fld-label">検証時間 / 総労働時間（10〜15%で業務化の根拠）</div><div class="computed" id="r-c-vr"><span class="empty">入力待ち</span></div><div class="bar"><div class="bar-fill" id="r-b3" style="width:0;background:var(--accent2)"></div></div></div>
+          </div>
+        </div>
+        <div class="memo-wrap"><div class="memo-label">検証メモ</div><textarea id="r-memo" placeholder="今月の検証内容や気づきを記入"></textarea></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hdr"><span class="sec-tag tag-ai">AI検証</span><span class="sec-title">作例・セオリー更新</span></div>
+        <div class="ai-table-wrap">
+          <table><thead><tr><th style="width:120px">使用ツール</th><th>プロンプト / 設定</th><th style="width:75px">評価</th><th>気づき・セオリーへの反映</th></tr></thead>
+          <tbody id="r-ai-body"></tbody></table>
+          <button class="add-row-btn" onclick="addRoiRow({})">＋ 行を追加</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI検証担当（中村・大石）-->
+    <div id="ai-ui" style="display:none">
+      <div class="sec">
+        <div class="sec-hdr">
+          <span class="sec-tag tag-ai">AI検証ログ</span>
+          <span class="sec-title">UIツール検証の記録</span>
+        </div>
+        <div class="sec-body" style="padding-bottom:0">
+          <div class="roi-group-label">今月の労働・検証時間</div>
+          <div class="g3" style="margin-bottom:24px">
+            <div class="fld"><div class="fld-num">base</div><div class="fld-label">総労働時間（月次）</div><input type="number" id="a-total-work" placeholder="例: 160" step="0.5"></div>
+            <div class="fld calc"><div class="fld-num">検証時間合計（自動）</div><div class="fld-label">各エントリーの合計</div><div class="computed yellow" id="a-c-total" style="font-size:20px"><span class="empty">—</span></div></div>
+            <div class="fld calc">
+              <div class="fld-num">⑤ 検証時間比率（自動）</div>
+              <div class="fld-label">検証時間合計 / 総労働時間</div>
+              <div class="computed" id="a-c-vr"><span class="empty">入力待ち</span></div>
+              <div style="margin-top:6px">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px">
+                  <span>0%</span><span style="color:var(--accent4)">10%</span><span style="color:var(--accent3)">15%</span><span>20%</span>
+                </div>
+                <div style="height:10px;background:var(--border);border-radius:6px;overflow:hidden;position:relative">
+                  <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--accent4);opacity:.5"></div>
+                  <div style="position:absolute;left:75%;top:0;bottom:0;width:1px;background:var(--accent3);opacity:.5"></div>
+                  <div class="bar-fill" id="a-b1" style="width:0;height:100%;border-radius:6px;transition:width .4s ease,background .4s ease"></div>
+                </div>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px" id="a-vr-hint"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:16px">
+          <div class="roi-group-label" style="margin-bottom:4px">検証ログ</div>
+          <div id="ai-entries" style="display:flex;flex-direction:column;gap:16px"></div>
+        </div>
+        <div style="padding:0 20px 20px">
+          <button class="add-row-btn" onclick="addAiEntry({})">＋ 検証を追加</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="save-bar">
+      <span class="save-status" id="save-status">未保存</span>
+      <button class="btn-clear" onclick="clearMonth()">この月をリセット</button>
+      <button class="btn-save" onclick="doSave()">保存する</button>
+    </div>
+  </div>
+
+  <!-- 蓄積データ -->
+  <div id="accum-view" style="display:none">
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-a">小野寺</span><span class="sec-title">動画ROI 月次サマリー</span></div>
+      <div class="accum-table-wrap"><div id="accum-roi"></div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-ai">中村</span><span class="sec-title">UI AI検証ログ</span></div>
+      <div class="accum-table-wrap"><div id="accum-ai-nakamura"></div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-ai">大石</span><span class="sec-title">UI AI検証ログ</span></div>
+      <div class="accum-table-wrap"><div id="accum-ai-oishi"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Firebase初期化 ──
+const firebaseConfig = {
+  apiKey: "AIzaSyBm-QkTqhnU81WAjgeQz1Gqp5xpzUnIB1w",
+  authDomain: "ixyas-creative.firebaseapp.com",
+  projectId: "ixyas-creative",
+  storageBucket: "ixyas-creative.firebasestorage.app",
+  messagingSenderId: "596141559233",
+  appId: "1:596141559233:web:ce81fcd1614536fdfa7340"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ── 定数 ──
+const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
+const MKEYS=['04','05','06','07','08','09','10','11','12','01','02','03'];
+const ROI_IDS=['r-total-hours','r-total-videos','r-ai-videos','r-firefly','r-hourly','r-cs-hourly','r-fee','r-cs','r-total-work','r-verify-h','r-memo'];
+
+let currentUser=null, currentRole=null, curMonth=0;
+
+// ── 起動 ──
+window.onload = () => {
+  document.getElementById('loading').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+};
+
+// ── ログイン ──
+function doLogin(name, role) {
+  currentUser=name; currentRole=role;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-screen').style.display='';
+  document.getElementById('disp-user').textContent=name;
+  const badge=document.getElementById('role-badge');
+  badge.textContent=role==='roi'?'動画 ROI担当':'UI AI検証担当';
+  badge.className='role-badge '+(role==='roi'?'badge-roi':'badge-ai');
+  const av=document.getElementById('hdr-av');
+  av.style.background=role==='roi'?'rgba(91,143,255,.2)':'rgba(255,209,102,.2)';
+  av.style.color=role==='roi'?'var(--accent)':'var(--accent4)';
+  av.textContent=name[0];
+  document.getElementById('roi-ui').style.display=role==='roi'?'':'none';
+  document.getElementById('ai-ui').style.display=role==='ai'?'':'none';
+  renderTabs(); loadFields();
+}
+function doLogout(){if(confirm('ログアウトしますか？'))location.reload();}
+
+// ── Firestore キー ──
+function docKey(){return `${currentUser}_${MKEYS[curMonth]}`;}
+
+// ── 読み込み ──
+async function loadFields(){
+  setSaveStatus('読込中...','saving');
+  try{
+    const snap=await db.collection('dashboard').doc(docKey()).get();
+    const d=snap.exists?snap.data():{};
+    if(currentRole==='roi'){
+      ROI_IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
+      const body=document.getElementById('r-ai-body');body.innerHTML='';
+      const rows=d['r-ai-log']||[{}];rows.forEach(addRoiRow);if(!rows.length)addRoiRow({});
+      bindRoi();
+    } else {
+      ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
+      const wrap=document.getElementById('ai-entries');wrap.innerHTML='';
+      const entries=d['a-entries']||[{}];entries.forEach(addAiEntry);if(!entries.length)addAiEntry({});
+      bindAi();
+    }
+    setSaveStatus('未保存','');
+    computeAll();
+  }catch(e){setSaveStatus('読込エラー','');}
+}
+
+// ── 保存 ──
+async function doSave(){
+  setSaveStatus('保存中...','saving');
+  const d={};
+  if(currentRole==='roi'){
+    ROI_IDS.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
+    const rows=[];
+    document.querySelectorAll('#r-ai-body tr').forEach(tr=>{
+      const c=tr.querySelectorAll('td');
+      if(c.length>=4)rows.push({tool:c[0].querySelector('input')?.value||'',prompt:c[1].querySelector('input')?.value||'',eval_:c[2].querySelector('select')?.value||'',note:c[3].querySelector('input')?.value||''});
+    });
+    d['r-ai-log']=rows;
+  } else {
+    ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
+    const entries=[];
+    document.querySelectorAll('.ai-entry').forEach(card=>{
+      entries.push({content:card.querySelector('.ae-content')?.value||'',time:card.querySelector('.ae-time')?.value||''});
+    });
+    d['a-entries']=entries;
+  }
+  d['_user']=currentUser; d['_role']=currentRole; d['_month']=MKEYS[curMonth];
+  try{
+    await db.collection('dashboard').doc(docKey()).set(d);
+    setSaveStatus('保存済み ✓','saved');
+    setTimeout(()=>setSaveStatus('未保存',''),2500);
+    renderTabs();
+  }catch(e){setSaveStatus('保存エラー','');}
+}
+
+async function clearMonth(){
+  if(!confirm('この月のデータをリセットしますか？'))return;
+  try{
+    await db.collection('dashboard').doc(docKey()).delete();
+    loadFields(); renderTabs();
+  }catch(e){}
+}
+
+function setSaveStatus(txt,cls){
+  const s=document.getElementById('save-status');
+  s.textContent=txt; s.className='save-status '+(cls||'');
+}
+
+// ── 月タブ ──
+async function renderTabs(){
+  const nav=document.getElementById('month-nav');nav.innerHTML='';
+  let savedMonths=new Set();
+  try{
+    const snap=await db.collection('dashboard').where('_user','==',currentUser).get();
+    snap.forEach(doc=>savedMonths.add(doc.data()['_month']));
+  }catch(e){}
+  MONTHS.forEach((m,i)=>{
+    const btn=document.createElement('button');
+    btn.className='mtab'+(i===curMonth?' active':'');
+    if(savedMonths.has(MKEYS[i]))btn.classList.add('has-data');
+    btn.textContent=m;
+    btn.onclick=()=>{curMonth=i;renderTabs();loadFields();};
+    nav.appendChild(btn);
+  });
+}
+
+// ── 計算 ──
+function nv(id){const e=document.getElementById(id);return e?parseFloat(e.value)||0:0;}
+function fmt(v,u){
+  if(isNaN(v)||!isFinite(v))return null;
+  if(u==='¥')return'¥'+Math.round(v).toLocaleString();
+  if(u==='%')return v.toFixed(1)+'%';
+  return(v%1===0?v:v.toFixed(1))+u;
+}
+function setC(id,val,cls){
+  const e=document.getElementById(id);if(!e)return;
+  if(val===null){e.innerHTML='<span class="empty">—</span>';return;}
+  e.className='computed '+(cls||'');e.textContent=val;
+}
+function computeAll(){
+  if(currentRole==='roi')computeRoi(); else computeAi();
+}
+function computeRoi(){
+  const th=nv('r-total-hours'),tv=nv('r-total-videos'),av=nv('r-ai-videos'),
+        fm=nv('r-firefly'),hr=nv('r-hourly'),csHr=nv('r-cs-hourly'),fee=nv('r-fee'),
+        cs=nv('r-cs'),tw=nv('r-total-work'),vh=nv('r-verify-h');
+  const pv=tv>0?th/tv:null;
+  setC('r-c-pv',pv!==null?fmt(pv,'h'):null,'');
+  const b1=document.getElementById('r-b1');if(b1)b1.style.width=pv?Math.min(pv/6*100,100)+'%':'0';
+  const fpv=av>0?fm/av:null;
+  setC('r-c-fpv',fpv!==null?fmt(fpv,'¥'):null,'yellow');
+  const csCost=cs*csHr, onoCost=th*hr;
+  setC('r-c-cs-cost',csHr>0&&cs>0?fmt(csCost,'¥'):null,'yellow');
+  setC('r-c-ono-cost',hr>0&&th>0?fmt(onoCost,'¥'):null,'yellow');
+  const cost=onoCost+fm+csCost,hasBase=fee>0&&(hr>0||csHr>0),gross=fee-cost,gr=fee>0?gross/fee*100:null;
+  setC('r-c-cost',hasBase?fmt(cost,'¥'):null,'');
+  setC('r-c-gross',hasBase?fmt(gross,'¥'):null,gross>=0?'green':'red');
+  setC('r-c-grate',gr!==null?fmt(gr,'%'):null,gr>=0?'green':'red');
+  const b2=document.getElementById('r-b2');if(b2&&fee>0)b2.style.width=Math.max(0,Math.min(gr,100))+'%';
+  const vr=tw>0?vh/tw*100:null;
+  const ve=document.getElementById('r-c-vr');
+  if(ve){if(vr!==null){ve.className='computed '+(vr>15?'red':vr>=10?'yellow':'green');ve.textContent=fmt(vr,'%');}else ve.innerHTML='<span class="empty">入力待ち</span>';}
+  const b3=document.getElementById('r-b3');if(b3)b3.style.width=vr?Math.min(vr/20*100,100)+'%':'0';
+  document.getElementById('s1').textContent=th?th+'h':'—';
+  document.getElementById('s2').textContent=pv!==null?fmt(pv,'h'):'—';
+  document.getElementById('s3').textContent=fpv!==null?fmt(fpv,'¥'):'—';
+  const s4=document.getElementById('s4');s4.textContent=hasBase?fmt(gross,'¥'):'—';s4.className='si-val '+(gross>=0?'green':'red');
+  const s5=document.getElementById('s5');s5.textContent=vr!==null?fmt(vr,'%'):'—';s5.className='si-val '+(vr>15?'red':vr>=10?'yellow':'green');
+}
+function computeAi(){
+  const tw=nv('a-total-work');
+  const cards=document.querySelectorAll('.ai-entry');
+  let totalTime=0;
+  cards.forEach(c=>{totalTime+=parseFloat(c.querySelector('.ae-time')?.value)||0;});
+  const vr=tw>0&&totalTime>0?totalTime/tw*100:null;
+  const ct=document.getElementById('a-c-total');
+  if(ct){ct.className='computed yellow';ct.textContent=totalTime?totalTime+'h':'—';}
+  const ve=document.getElementById('a-c-vr');
+  const b=document.getElementById('a-b1');
+  const hint=document.getElementById('a-vr-hint');
+  if(vr!==null){
+    const color=vr>15?'var(--accent3)':vr>=10?'var(--accent4)':'var(--accent2)';
+    if(ve){ve.className='computed '+(vr>15?'red':vr>=10?'yellow':'green');ve.textContent=vr.toFixed(1)+'%';}
+    if(b){b.style.width=Math.min(vr/20*100,100)+'%';b.style.background=color;}
+    if(hint){hint.textContent=vr>15?'業務化の根拠として十分な水準です':vr>=10?'業務化を提案できる水準に近づいています':'引き続き検証を継続してください';}
+  } else {
+    if(ve)ve.innerHTML='<span class="empty">入力待ち</span>';
+    if(b)b.style.width='0';
+    if(hint)hint.textContent='';
+  }
+}
+
+function addRoiRow(r){
+  const body=document.getElementById('r-ai-body');
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input placeholder="例: Runway v3" value="${esc(r.tool||'')}"></td>
+    <td><input placeholder="プロンプト・設定" value="${esc(r.prompt||'')}"></td>
+    <td><select style="background:transparent;border:none;color:var(--text);font-size:12px;outline:none;cursor:pointer">
+      <option value="">—</option>
+      <option value="◎" ${r.eval_==='◎'?'selected':''}>◎ 採用</option>
+      <option value="○" ${r.eval_==='○'?'selected':''}>○ 要調整</option>
+      <option value="△" ${r.eval_==='△'?'selected':''}>△ 保留</option>
+      <option value="×" ${r.eval_==='×'?'selected':''}>× NG</option>
+    </select></td>
+    <td><input placeholder="セオリーへの反映" value="${esc(r.note||'')}"></td>`;
+  body.appendChild(tr);
+}
+
+function addAiEntry(r){
+  const wrap=document.getElementById('ai-entries');
+  const idx=wrap.children.length+1;
+  const div=document.createElement('div');
+  div.className='ai-entry';
+  div.innerHTML=`
+    <div class="ae-body">
+      <div class="ae-entry-label">検証 #${idx}</div>
+      <div class="ae-time-row">
+        <span class="ae-time-label">検証時間</span>
+        <input class="ae-time" type="number" placeholder="0" min="0" step="0.5" value="${r.time||''}">
+        <span class="ae-time-unit">h</span>
+      </div>
+      <div class="ae-field-label">調査内容</div>
+      <textarea class="ae-content" placeholder="使用ツール・プロンプト・設定・気づきを自由に記入">${esc(r.content||'')}</textarea>
+    </div>`;
+  wrap.appendChild(div);
+  div.querySelectorAll('input,textarea').forEach(e=>e.addEventListener('input',computeAi));
+}
+
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+function bindRoi(){
+  document.querySelectorAll('#roi-ui input,#roi-ui textarea,#roi-ui select').forEach(e=>{if(!e._b){e._b=true;e.addEventListener('input',computeRoi);}});
+}
+function bindAi(){
+  document.querySelectorAll('#ai-ui input,#ai-ui textarea').forEach(e=>{if(!e._b){e._b=true;e.addEventListener('input',computeAi);}});
+}
+new MutationObserver(bindRoi).observe(document.getElementById('r-ai-body'),{childList:true});
+new MutationObserver(()=>bindAi()).observe(document.getElementById('ai-entries'),{childList:true,subtree:true});
+
+// ── ビュー切り替え ──
+function switchView(v){
+  document.getElementById('input-view').style.display=v==='input'?'':'none';
+  document.getElementById('accum-view').style.display=v==='accum'?'':'none';
+  document.getElementById('vtab-input').className='vtab'+(v==='input'?' active':'');
+  document.getElementById('vtab-accum').className='vtab'+(v==='accum'?' active':'');
+  if(v==='accum')renderAccum();
+}
+
+// ── 蓄積データ ──
+async function renderAccum(){
+  document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込み中...</div>';
+  document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込み中...</div>';
+  document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込み中...</div>';
+  try{
+    const snap=await db.collection('dashboard').get();
+    const allDocs=[];
+    snap.forEach(doc=>allDocs.push(doc.data()));
+
+    // ROI（小野寺）
+    const roiDocs=allDocs.filter(d=>d._user==='小野寺').sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
+    const roiWrap=document.getElementById('accum-roi');
+    if(!roiDocs.length){roiWrap.innerHTML='<div class="no-data">まだデータがありません</div>';}
+    else{
+      roiWrap.innerHTML=`<table class="accum-table">
+        <thead><tr><th>月</th><th>制作時間</th><th>本数</th><th>AI使用</th><th>1本あたり</th><th>Firefly/本</th><th>受注フィー</th><th>粗利</th><th>検証比率</th></tr></thead>
+        <tbody>${roiDocs.map(d=>{
+          const th=parseFloat(d['r-total-hours'])||0,tv=parseFloat(d['r-total-videos'])||0,
+                av=parseFloat(d['r-ai-videos'])||0,fm=parseFloat(d['r-firefly'])||0,
+                hr=parseFloat(d['r-hourly'])||0,fee=parseFloat(d['r-fee'])||0,
+                cs=parseFloat(d['r-cs'])||0,tw=parseFloat(d['r-total-work'])||0,vh=parseFloat(d['r-verify-h'])||0;
+          const pv=tv>0?th/tv:null,fpv=av>0?fm/av:null,
+                cost=th*hr+fm+cs*hr,gross=fee>0?fee-cost:null,vr=tw>0?vh/tw*100:null;
+          const mi=MKEYS.indexOf(d._month);
+          return`<tr>
+            <td class="col-month">${MONTHS[mi]||d._month}</td>
+            <td>${th?th+'h':'—'}</td><td>${tv||'—'}</td><td>${av||'—'}</td>
+            <td>${pv!==null?(pv%1===0?pv:pv.toFixed(1))+'h':'—'}</td>
+            <td>${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
+            <td>${fee?'¥'+fee.toLocaleString():'—'}</td>
+            <td class="${gross===null?'':(gross>=0?'col-pos':'col-neg')}">${gross!==null?'¥'+Math.round(gross).toLocaleString():'—'}</td>
+            <td class="${vr===null?'':(vr>15?'col-neg':vr>=10?'col-warn':'col-pos')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
+          </tr>`;
+        }).join('')}</tbody></table>`;
+    }
+
+    // AI検証（中村・大石 別々に表示）
+    ['中村','大石'].forEach(name=>{
+      const wrapId=name==='中村'?'accum-ai-nakamura':'accum-ai-oishi';
+      const wrap=document.getElementById(wrapId);
+      const docs=allDocs.filter(d=>d._user===name).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
+      if(!docs.length){wrap.innerHTML='<div class="no-data">まだデータがありません</div>';return;}
+      const rows=docs.map(d=>{
+        const mi=MKEYS.indexOf(d._month);
+        const tw=parseFloat(d['a-total-work'])||0;
+        const entries=d['a-entries']||[];
+        // 旧フォーマット(a-verify-h)と新フォーマット(エントリー合計)に両対応
+        const entryTotal=entries.reduce((s,e)=>s+(parseFloat(e.time)||0),0);
+        const totalVerify=entryTotal>0?entryTotal:(parseFloat(d['a-verify-h'])||0);
+        const vr=tw>0&&totalVerify>0?totalVerify/tw*100:null;
+        // 旧フォーマット(tool/prompt/note)と新フォーマット(content)に両対応
+        const combined=entries.map((e,i)=>{
+          const text=e.content||(([e.tool,e.prompt,e.note].filter(Boolean).join(' / '))||'');
+          return text?`<span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
+        }).filter(Boolean).join('<br><br>');
+        return`<tr>
+          <td class="col-month" style="vertical-align:top;padding-top:14px">${MONTHS[mi]||d._month}</td>
+          <td style="vertical-align:top;padding-top:14px;font-family:'DM Mono',monospace">${totalVerify?totalVerify+'h':'—'}</td>
+          <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-pos':vr>=10?'col-warn':'')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
+          <td style="white-space:normal;line-height:1.8;padding:12px 16px">${combined||'—'}</td>
+        </tr>`;
+      }).join('');
+      wrap.innerHTML=`<table class="accum-table">
+        <colgroup><col style="width:80px"><col style="width:130px"><col style="width:120px"><col></colgroup>
+        <thead><tr><th>月</th><th>検証時間合計</th><th>検証比率</th><th>調査内容</th></tr></thead>
+        <tbody>${rows}</tbody></table>`;
+    });
+  }catch(e){
+    document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込みエラー</div>';
+    document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込みエラー</div>';
+    document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込みエラー</div>';
+  }
+}
+</script>
+</body>
+</html>
