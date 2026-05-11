@@ -676,6 +676,12 @@ async function renderAccum(){
     snap.forEach(doc=>allDocs.push(doc.data()));
 
     // ROI（小野寺）
+    // 年度計算（4月始まり）
+    const now=new Date();
+    const fiscalStartYear=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1;
+    const monthYear=(mk)=>parseInt(mk)>=4?fiscalStartYear:fiscalStartYear+1;
+    const monthLabel=(mk)=>{const mi=MKEYS.indexOf(mk);return `${monthYear(mk)}年 ${MONTHS[mi]||mk}`;};
+
     const roiDocs=allDocs.filter(d=>d._user==='小野寺').sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
     const roiWrap=document.getElementById('accum-roi');
     if(!roiDocs.length){roiWrap.innerHTML='<div class="no-data">まだデータがありません</div>';}
@@ -689,9 +695,8 @@ async function renderAccum(){
                 cs=parseFloat(d['r-cs'])||0,tw=parseFloat(d['r-total-work'])||0,vh=parseFloat(d['r-verify-h'])||0;
           const pv=tv>0?th/tv:null,fpv=av>0?fm/av:null,
                 cost=th*hr+fm+cs*hr,gross=fee>0?fee-cost:null,vr=tw>0?vh/tw*100:null;
-          const mi=MKEYS.indexOf(d._month);
           return`<tr>
-            <td class="col-month">${MONTHS[mi]||d._month}</td>
+            <td class="col-month">${monthLabel(d._month)}</td>
             <td>${th?th+'h':'—'}</td><td>${tv||'—'}</td><td>${av||'—'}</td>
             <td>${pv!==null?(pv%1===0?pv:pv.toFixed(1))+'h':'—'}</td>
             <td>${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
@@ -722,14 +727,14 @@ async function renderAccum(){
           return text?`<span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
         }).filter(Boolean).join('<br><br>');
         return`<tr>
-          <td class="col-month" style="vertical-align:top;padding-top:14px">${MONTHS[mi]||d._month}</td>
+          <td class="col-month" style="vertical-align:top;padding-top:14px;white-space:nowrap">${monthLabel(d._month)}</td>
           <td style="vertical-align:top;padding-top:14px;font-family:'DM Mono',monospace">${totalVerify?totalVerify+'h':'—'}</td>
           <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-pos':vr>=10?'col-warn':'')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
           <td style="white-space:normal;line-height:1.8;padding:12px 16px">${combined||'—'}</td>
         </tr>`;
       }).join('');
       wrap.innerHTML=`<table class="accum-table">
-        <colgroup><col style="width:80px"><col style="width:130px"><col style="width:120px"><col></colgroup>
+        <colgroup><col style="width:120px"><col style="width:130px"><col style="width:120px"><col></colgroup>
         <thead><tr><th>月</th><th>検証時間合計</th><th>検証比率</th><th>調査内容</th></tr></thead>
         <tbody>${rows}</tbody></table>`;
     });
