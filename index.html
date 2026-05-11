@@ -483,15 +483,15 @@ td input::placeholder{color:var(--dim)}
 <!-- ツール入力画面 -->
 <div id="tool-screen" style="display:none">
   <div style="max-width:1080px;margin:0 auto;padding:32px 24px 0">
-    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:1.5rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:0">
       <div>
         <p style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Reel Production</p>
         <h1 id="tool-screen-title" style="font-family:'DM Mono',monospace;font-size:20px">ツールモニタリング</h1>
       </div>
       <button class="btn-logout" onclick="backToToolHub()">← ツール一覧に戻る</button>
     </div>
-    <div class="mtabs" id="lm-month-nav"></div>
   </div>
+  <div class="mtabs" id="lm-month-nav" style="max-width:1080px;margin:1.5rem auto;padding:0 24px"></div>
 
   <div style="max-width:1080px;margin:0 auto;padding:0 24px">
     <!-- Layermate -->
@@ -671,6 +671,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+let lmMonth=0;
 
 // ── 定数 ──
 const MONTHS=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
@@ -983,22 +984,23 @@ function computeLm(){
   }
 }
 
-async function renderLmTabs(){
+function renderLmTabs(){
   const nav=document.getElementById('lm-month-nav');if(!nav)return;
-  let savedMonths=new Set();
-  try{
-    const snap=await db.collection('layermate').get();
-    snap.forEach(doc=>{const d=doc.data();if(d._month)savedMonths.add(d._month);});
-  }catch(e){}
   nav.innerHTML='';
   MONTHS.forEach((m,i)=>{
     const btn=document.createElement('button');
     btn.className='mtab'+(i===lmMonth?' active':'');
-    if(savedMonths.has(MKEYS[i]))btn.classList.add('has-data');
     btn.textContent=m;
     btn.onclick=()=>{lmMonth=i;renderLmTabs();loadLmFields();};
     nav.appendChild(btn);
   });
+  db.collection('layermate').get().then(snap=>{
+    const saved=new Set();
+    snap.forEach(doc=>{const d=doc.data();if(d._month)saved.add(d._month);});
+    nav.querySelectorAll('.mtab').forEach((b,i)=>{
+      if(saved.has(MKEYS[i]))b.classList.add('has-data');
+    });
+  }).catch(()=>{});
 }
 
 function lmDocKey(){return`lm_${MKEYS[lmMonth]}`;}
@@ -1034,8 +1036,6 @@ async function clearLmMonth(){
 }
 
 
-let lmMonth=0;
-
 function switchView(v){
   document.getElementById('input-view').style.display=v==='input'?'':'none';
   document.getElementById('accum-view').style.display=v==='accum'?'':'none';
@@ -1053,6 +1053,11 @@ function openTool(toolId){
   document.getElementById('tool-hub').style.display='none';
   document.getElementById('tool-screen').style.display='';
   document.getElementById('tool-screen-title').textContent=toolId==='layermate'?'Layermate モニタリング':'ツールモニタリング';
+  // 初回表示時は今月のタブをデフォルト選択
+  const now=new Date();
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  const idx=MKEYS.indexOf(mm);
+  if(idx!==-1)lmMonth=idx;
   renderLmTabs();loadLmFields();
 }
 
