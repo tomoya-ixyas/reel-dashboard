@@ -12,7 +12,7 @@
 :root {
   --bg:#0e0f11; --surface:#16181d; --surface2:#1e2028; --border:#2a2d38;
   --accent:#5b8fff; --accent2:#3dffc8; --accent3:#ff6b6b; --accent4:#ffd166;
-  --text:#e8eaf0; --muted:#6b7080; --dim:#3a3d4a;
+  --text:#e8eaf0; --muted:#8c919e; --dim:#606678;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;padding:32px 24px}
@@ -26,7 +26,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-seri
 /* ── ログイン ── */
 #login-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:100}
 .login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:420px}
-.login-logo{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.login-logo{font-family:'DM Mono',monospace;font-size:14px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
 .login-box h2{font-size:22px;font-weight:500;margin-bottom:8px}
 .login-box p{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.7}
 .member-grid{display:flex;flex-direction:column;gap:10px}
@@ -38,17 +38,17 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-seri
 .mb-info{display:flex;flex-direction:column;gap:4px;flex:1}
 .mb-name{font-size:17px;font-weight:500;color:var(--text)}
 .mb-role{font-size:13px;color:var(--muted)}
-.mb-badge{font-size:12px;padding:4px 10px;border-radius:20px;font-weight:500;flex-shrink:0}
+.mb-badge{font-size:14px;padding:4px 10px;border-radius:20px;font-weight:500;flex-shrink:0}
 .badge-roi{background:rgba(91,143,255,.15);color:var(--accent)}
 .badge-ai{background:rgba(255,209,102,.12);color:var(--accent4)}
 
 /* ── ヘッダー ── */
 header{max-width:1080px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px}
-.hdr-left p{font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.hdr-left p{font-size:14px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
 .hdr-left h1{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:-.02em}
 .hdr-right{display:flex;gap:10px;align-items:center}
 .user-pill{font-size:14px;font-weight:400;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:7px 16px;display:flex;align-items:center;gap:8px}
-.role-badge{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:500}
+.role-badge{font-size:14px;padding:3px 10px;border-radius:20px;font-weight:500}
 .btn-logout{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:7px 16px;cursor:pointer;transition:all .15s}
 .btn-logout:hover{border-color:var(--accent3);color:var(--accent3)}
 
@@ -73,14 +73,14 @@ main{max-width:1080px;margin:0 auto}
 .summary.cols3{grid-template-columns:repeat(3,1fr)}
 .si{padding:1.5rem;border-right:1px solid var(--border)}
 .si:last-child{border-right:none}
-.si-label{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
+.si-label{font-size:14px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
 .si-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
 .si-val.blue{color:var(--accent)} .si-val.green{color:var(--accent2)} .si-val.yellow{color:var(--accent4)} .si-val.red{color:var(--accent3)}
 
 /* ── セクション ── */
 .sec{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden}
 .sec-hdr{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sec-tag{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:4px 10px;border-radius:4px;letter-spacing:.06em}
+.sec-tag{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;padding:4px 10px;border-radius:4px;letter-spacing:.06em}
 .tag-a{background:rgba(91,143,255,.15);color:var(--accent)}
 .tag-b{background:rgba(61,255,200,.12);color:var(--accent2)}
 .tag-ai{background:rgba(255,209,102,.12);color:var(--accent4)}
@@ -92,7 +92,7 @@ main{max-width:1080px;margin:0 auto}
 .fld{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px}
 .fld.calc{border-color:rgba(91,143,255,.3);background:rgba(91,143,255,.04)}
 .fld.hl{border-color:rgba(61,255,200,.25);background:rgba(61,255,200,.04)}
-.fld-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.1em}
+.fld-num{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.1em}
 .fld-label{font-size:13px;color:var(--muted);line-height:1.5}
 .fld input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:10px 14px;width:100%;outline:none;transition:border-color .15s}
 .fld input:focus{border-color:var(--accent)}
@@ -101,19 +101,19 @@ main{max-width:1080px;margin:0 auto}
 .unit{font-size:13px;color:var(--muted)}
 .computed{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;min-height:38px;display:flex;align-items:center;color:var(--accent)}
 .computed.green{color:var(--accent2)} .computed.red{color:var(--accent3)} .computed.yellow{color:var(--accent4)}
-.computed .empty{font-size:15px;font-weight:300;color:var(--dim)}
+.computed .empty{font-size:15px;font-weight:300;color:var(--muted)}
 .bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:2px}
 .bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
 
 .memo-wrap{padding:0 24px 24px}
-.memo-label{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
+.memo-label{font-size:14px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
 .memo-wrap textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:300;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px}
 .memo-wrap textarea:focus{border-color:var(--accent2)}
 .memo-wrap textarea::placeholder{color:var(--dim)}
 
 .ai-table-wrap{padding:0 24px 24px;overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:14px}
-th{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
+th{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
 td{padding:10px 12px;border-bottom:1px solid var(--dim)}
 tr:last-child td{border-bottom:none}
 td input,td select{background:transparent;border:none;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;width:100%;outline:none}
@@ -126,7 +126,7 @@ td input::placeholder{color:var(--dim)}
 .ai-entry{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px}
 .ae-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
 .ae-field{display:flex;flex-direction:column;gap:6px}
-.ae-label{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.ae-label{font-size:14px;color:var(--muted);letter-spacing:.06em}
 .ae-field input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP',sans-serif}
 .ae-field input::placeholder{color:var(--dim)}
 .ae-field textarea{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP',sans-serif;resize:vertical;min-height:64px;line-height:1.6}
@@ -134,7 +134,7 @@ td input::placeholder{color:var(--dim)}
 
 /* ── 保存バー ── */
 .save-bar{max-width:1080px;margin:.75rem auto 0;display:flex;justify-content:flex-end;align-items:center;gap:10px}
-.save-status{font-family:'DM Mono',monospace;font-size:13px;color:var(--dim);transition:color .3s}
+.save-status{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);transition:color .3s}
 .save-status.saved{color:var(--accent2)}
 .save-status.saving{color:var(--accent4)}
 .btn-save{background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;cursor:pointer;transition:opacity .15s}
@@ -145,16 +145,16 @@ td input::placeholder{color:var(--dim)}
 /* ── 蓄積データ ── */
 .accum-table-wrap{padding:24px;overflow-x:auto}
 .accum-table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}
-.accum-table th{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
+.accum-table th{font-family:'DM Mono',monospace;font-size:14px;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
 .accum-table td{padding:12px 16px;border-bottom:1px solid var(--dim);font-family:'DM Mono',monospace;font-size:14px}
 .accum-table tr:last-child td{border-bottom:none}
 .accum-table tr:hover td{background:rgba(255,255,255,.02)}
 .col-month{color:var(--accent);font-weight:500}
 .col-pos{color:var(--accent2)} .col-neg{color:var(--accent3)} .col-warn{color:var(--accent4)}
-.no-data{padding:3rem;text-align:center;color:var(--dim);font-size:15px}
+.no-data{padding:3rem;text-align:center;color:var(--muted);font-size:15px}
 
 /* ── ログイン2セクション ── */
-.login-section-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.login-section-label{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
 .login-divider{height:1px;background:var(--border);margin:22px 0}
 .tool-grid{display:flex;flex-direction:column;gap:8px}
 .tool-btn{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;width:100%}
@@ -162,7 +162,7 @@ td input::placeholder{color:var(--dim)}
 .tool-icon{font-size:22px;flex-shrink:0}
 .tool-info{display:flex;flex-direction:column;gap:3px;flex:1}
 .tool-name{font-size:15px;font-weight:500;color:var(--text)}
-.tool-desc{font-size:12px;color:var(--muted)}
+.tool-desc{font-size:14px;color:var(--muted)}
 .tool-entry-btn{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;width:100%;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
 .tool-entry-btn:hover{border-color:var(--accent);background:rgba(91,143,255,.06)}
 .tool-entry-icon{font-size:22px}
@@ -173,7 +173,7 @@ td input::placeholder{color:var(--dim)}
 .lm-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .lm-card-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
 .lm-card-name{font-size:18px;font-weight:500;color:var(--text)}
-.lm-card-sub{font-size:12px;color:var(--muted)}
+.lm-card-sub{font-size:14px;color:var(--muted)}
 .lm-card-grant{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent)}
 .lm-card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
 .lm-transfer-row{display:flex;align-items:center;gap:12px}
@@ -184,19 +184,19 @@ td input::placeholder{color:var(--dim)}
 .lm-type-row{display:flex;flex-direction:column;gap:8px}
 .lm-type-label{font-size:14px;font-weight:500;color:var(--text)}
 .lm-type-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.lm-input-label{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-bottom:5px}
+.lm-input-label{font-size:13px;color:var(--muted);letter-spacing:.04em;margin-bottom:5px}
 .lm-type-inputs input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;padding:9px 12px;outline:none;width:100%}
 .lm-type-inputs input:focus{border-color:var(--accent)}
 .lm-auto-val{font-family:'DM Mono',monospace;font-size:15px;color:var(--accent4);padding:9px 0}
 .lm-result-row{display:flex;gap:20px;flex-wrap:wrap;padding-top:4px}
-.lm-result-label{font-size:12px;color:var(--muted);margin-right:6px}
+.lm-result-label{font-size:14px;color:var(--muted);margin-right:6px}
 .lm-result-val{font-family:'DM Mono',monospace;font-size:14px;color:var(--text)}
 .lm-result-ratio{font-family:'DM Mono',monospace;font-size:20px;font-weight:700}
 .ai-summary-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;padding:0;display:flex;align-items:stretch;overflow:hidden}
 .ai-sb-item{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:8px;flex:1}
 .ai-sb-item-wide{flex:1.5}
 .ai-sb-divider{width:1px;background:var(--border);flex-shrink:0}
-.ai-sb-label{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.ai-sb-label{font-size:14px;color:var(--muted);letter-spacing:.06em}
 .ai-sb-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
 .ai-sb-val.blue{color:var(--accent)}
 .ai-sb-val.yellow{color:var(--accent4)}
@@ -206,26 +206,26 @@ td input::placeholder{color:var(--dim)}
 /* ── AI検証エントリーカード ── */
 .ai-entry{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent4);border-radius:10px;overflow:hidden}
 .ae-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
-.ae-entry-label{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--accent4);letter-spacing:.08em}
+.ae-entry-label{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--accent4);letter-spacing:.08em}
 .ae-time-row{display:flex;align-items:center;gap:12px}
 .ae-time-label{font-size:14px;color:var(--muted);white-space:nowrap}
 .ae-time{width:100px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:18px;font-weight:500;padding:10px 14px;outline:none}
 .ae-time:focus{border-color:var(--accent)}
 .ae-time-unit{font-size:14px;color:var(--muted)}
-.ae-field-label{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.ae-field-label{font-size:14px;color:var(--muted);letter-spacing:.04em}
 .ae-body textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:300;line-height:1.7;padding:10px 14px;resize:vertical;outline:none;min-height:90px}
 .ae-body textarea:focus{border-color:var(--accent2)}
 .ae-body textarea::placeholder{color:var(--dim)}
-.roi-group-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
+.roi-group-label{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
 
 /* ── コスト内訳テーブル ── */
 .cost-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .ct-head{display:grid;grid-template-columns:160px 1fr 1fr 1fr;background:var(--surface2);padding:10px 16px;gap:12px}
-.ct-head div{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.ct-head div{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.06em}
 .ct-row{display:grid;grid-template-columns:160px 1fr 1fr 1fr;padding:14px 16px;gap:12px;border-top:1px solid var(--border);align-items:center}
 .ct-row:hover{background:rgba(255,255,255,.015)}
 .ct-person{font-size:15px;font-weight:500;color:var(--text)}
-.ct-ref{font-size:12px;color:var(--dim);padding-top:4px}
+.ct-ref{font-size:14px;color:var(--muted);padding-top:4px}
 .ct-auto{display:flex;flex-direction:column}
 .ct-row input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;padding:8px 12px;width:100%;outline:none;transition:border-color .15s}
 .ct-row input:focus{border-color:var(--accent)}
@@ -236,13 +236,33 @@ td input::placeholder{color:var(--dim)}
 .analytics-grid.cols1{grid-template-columns:1fr}
 .chart-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px}
 .chart-title{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:.06em;margin-bottom:4px}
-.chart-sub{font-size:12px;color:var(--dim);margin-bottom:16px}
+.chart-sub{font-size:14px;color:var(--muted);margin-bottom:16px}
 .chart-wrap{position:relative;height:220px}
 .kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
 .kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
-.kpi-label{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:6px}
+.kpi-label{font-size:13px;color:var(--muted);letter-spacing:.06em;margin-bottom:6px}
 .kpi-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500}
-.kpi-note{font-size:11px;color:var(--dim);margin-top:4px}
+.kpi-note{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* ── Layermate蓄積カード ── */
+.lm-accum-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.lm-accum-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface)}
+.lm-accum-month{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--text)}
+.lm-accum-grant{font-family:'DM Mono',monospace;font-size:14px;color:var(--muted)}
+.lm-accum-body{display:grid;grid-template-columns:1fr 1fr}
+.lm-accum-person{padding:14px 18px}
+.lm-accum-person+.lm-accum-person{border-left:1px solid var(--border)}
+.lm-accum-pname{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.lm-accum-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.lm-accum-row:last-child{border-bottom:none}
+.lm-accum-rlabel{font-size:13px;color:var(--muted)}
+.lm-accum-rval{font-family:'DM Mono',monospace;font-size:15px;font-weight:500}
+.lm-accum-rval.col-pos{color:var(--accent2)}
+.lm-accum-rval.col-warn{color:var(--accent4)}
+.lm-accum-rval.col-neg{color:#ff6b6b}
+.lm-accum-transfer{font-size:12px;color:var(--muted);margin-left:4px}
+.lm-accum-memo{padding:10px 18px;border-top:1px solid var(--border);font-size:14px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,.01)}
+.lm-accum-memo-label{font-size:12px;color:var(--muted);margin-bottom:4px;letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -289,7 +309,7 @@ td input::placeholder{color:var(--dim)}
 
     <div class="login-divider"></div>
 
-    <div class="login-section-label">UIツールモニタリング <span style="font-size:10px;color:var(--dim);letter-spacing:0;text-transform:none;font-weight:300">主に中村・大石が使用</span></div>
+    <div class="login-section-label">UIツールモニタリング <span style="font-size:10px;color:var(--muted);letter-spacing:0;text-transform:none;font-weight:300">主に中村・大石が使用</span></div>
     <button class="tool-entry-btn" onclick="openToolHub()">
       <span class="tool-entry-icon">🖥</span>
       <span class="tool-entry-label">UIツールモニタリング</span>
@@ -317,7 +337,7 @@ td input::placeholder{color:var(--dim)}
 
   <div class="vtabs">
     <button class="vtab active" id="vtab-input" onclick="switchView('input')">自分の入力</button>
-    <button class="vtab" id="vtab-accum" onclick="switchView('accum')">蓄積データ（全員分）</button>
+    <button class="vtab" id="vtab-accum" onclick="switchView('accum')">蓄積データ</button>
     <button class="vtab" id="vtab-analytics" onclick="switchView('analytics')">分析</button>
   </div>
 
@@ -451,12 +471,16 @@ td input::placeholder{color:var(--dim)}
   </div>
 
 
-  <!-- 蓄積データ -->
-  <div id="accum-view" style="display:none">
+  <!-- 蓄積データ：小野寺 -->
+  <div id="accum-roi-view" style="display:none">
     <div class="sec">
       <div class="sec-hdr"><span class="sec-tag tag-a">小野寺</span><span class="sec-title">動画ROI 月次サマリー</span></div>
       <div class="accum-table-wrap"><div id="accum-roi"></div></div>
     </div>
+  </div>
+
+  <!-- 蓄積データ：中村・大石・Layermate -->
+  <div id="accum-team-view" style="display:none">
     <div class="sec">
       <div class="sec-hdr"><span class="sec-tag tag-ai">中村</span><span class="sec-title">UI AI検証ログ</span></div>
       <div class="accum-table-wrap"><div id="accum-ai-nakamura"></div></div>
@@ -470,92 +494,59 @@ td input::placeholder{color:var(--dim)}
       <div class="accum-table-wrap"><div id="accum-lm"></div></div>
     </div>
   </div>
-</div>
 
-
-<!-- 分析ビュー -->
-<div id="analytic-view" style="display:none">
-
-  <!-- ROI分析 -->
-  <div class="sec">
-    <div class="sec-hdr"><span class="sec-tag tag-a">ROI</span><span class="sec-title">動画制作 収益・コスト分析</span></div>
-    <div class="sec-body">
-      <div class="kpi-strip">
-        <div class="kpi-card"><div class="kpi-label">累計粗利</div><div class="kpi-val blue" id="an-kpi-gross">—</div><div class="kpi-note">全記録月の合計</div></div>
-        <div class="kpi-card"><div class="kpi-label">平均粗利率</div><div class="kpi-val green" id="an-kpi-grate">—</div><div class="kpi-note">フィー対比</div></div>
-        <div class="kpi-card"><div class="kpi-label">平均 1本あたり</div><div class="kpi-val blue" id="an-kpi-pvh">—</div><div class="kpi-note">制作時間</div></div>
-        <div class="kpi-card"><div class="kpi-label">平均検証比率</div><div class="kpi-val" id="an-kpi-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
-      </div>
-      <div class="analytics-grid">
-        <div class="chart-card">
-          <div class="chart-title">粗利の月次推移</div>
-          <div class="chart-sub">受注フィー − 制作コスト合計</div>
-          <div class="chart-wrap"><canvas id="chart-gross"></canvas></div>
+  <!-- 分析ビュー -->
+  <div id="analytic-view" style="display:none">
+    <!-- ROI分析 -->
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-a">ROI</span><span class="sec-title">動画制作 収益・コスト分析</span></div>
+      <div class="sec-body">
+        <div class="kpi-strip">
+          <div class="kpi-card"><div class="kpi-label">累計粗利</div><div class="kpi-val blue" id="an-kpi-gross">—</div><div class="kpi-note">全記録月の合計</div></div>
+          <div class="kpi-card"><div class="kpi-label">平均粗利率</div><div class="kpi-val green" id="an-kpi-grate">—</div><div class="kpi-note">フィー対比</div></div>
+          <div class="kpi-card"><div class="kpi-label">平均 1本あたり</div><div class="kpi-val blue" id="an-kpi-pvh">—</div><div class="kpi-note">制作時間</div></div>
+          <div class="kpi-card"><div class="kpi-label">平均検証比率</div><div class="kpi-val" id="an-kpi-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
         </div>
-        <div class="chart-card">
-          <div class="chart-title">検証比率の月次推移</div>
-          <div class="chart-sub">検証時間 ÷ 総労働時間（目標: 10〜15%）</div>
-          <div class="chart-wrap"><canvas id="chart-vr"></canvas></div>
+        <div class="analytics-grid">
+          <div class="chart-card"><div class="chart-title">粗利の月次推移</div><div class="chart-sub">受注フィー − 制作コスト合計</div><div class="chart-wrap"><canvas id="chart-gross"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">検証比率の月次推移</div><div class="chart-sub">検証時間 ÷ 総労働時間（目標: 10〜15%）</div><div class="chart-wrap"><canvas id="chart-vr"></canvas></div></div>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-card"><div class="chart-title">1本あたり制作時間の推移</div><div class="chart-sub">制作時間合計 ÷ 制作本数</div><div class="chart-wrap"><canvas id="chart-pvh"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">制作コスト構成の推移</div><div class="chart-sub">人件費（小野寺+CS）+ Firefly</div><div class="chart-wrap"><canvas id="chart-cost"></canvas></div></div>
         </div>
       </div>
-      <div class="analytics-grid">
-        <div class="chart-card">
-          <div class="chart-title">1本あたり制作時間の推移</div>
-          <div class="chart-sub">制作時間合計 ÷ 制作本数</div>
-          <div class="chart-wrap"><canvas id="chart-pvh"></canvas></div>
+    </div>
+    <!-- AI検証分析 -->
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-ai">AI検証</span><span class="sec-title">検証時間比率分析（中村・大石）</span></div>
+      <div class="sec-body">
+        <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi-card"><div class="kpi-label">中村 平均検証比率</div><div class="kpi-val yellow" id="an-kpi-naka-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
+          <div class="kpi-card"><div class="kpi-label">大石 平均検証比率</div><div class="kpi-val yellow" id="an-kpi-oishi-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
+          <div class="kpi-card"><div class="kpi-label">中村 累計検証時間</div><div class="kpi-val blue" id="an-kpi-naka-total">—</div><div class="kpi-note">全記録月の合計</div></div>
         </div>
-        <div class="chart-card">
-          <div class="chart-title">制作コスト構成の推移</div>
-          <div class="chart-sub">人件費（小野寺+CS）+ Firefly</div>
-          <div class="chart-wrap"><canvas id="chart-cost"></canvas></div>
+        <div class="analytics-grid cols1">
+          <div class="chart-card"><div class="chart-title">検証時間比率の月次推移（中村・大石）</div><div class="chart-sub">検証時間 ÷ 総労働時間（目標ゾーン: 10〜15%）</div><div class="chart-wrap" style="height:240px"><canvas id="chart-ai-vr"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Layermate分析 -->
+    <div class="sec">
+      <div class="sec-hdr"><span class="sec-tag tag-a">Layermate</span><span class="sec-title">クレジット消費分析</span></div>
+      <div class="sec-body">
+        <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi-card"><div class="kpi-label">森崎 平均消費率</div><div class="kpi-val yellow" id="an-kpi-m-ratio">—</div><div class="kpi-note">全記録月平均</div></div>
+          <div class="kpi-card"><div class="kpi-label">佐藤 平均消費率</div><div class="kpi-val yellow" id="an-kpi-s-ratio">—</div><div class="kpi-note">全記録月平均</div></div>
+          <div class="kpi-card"><div class="kpi-label">最高消費率</div><div class="kpi-val red" id="an-kpi-lm-peak">—</div><div class="kpi-note">要注意ライン: 90%</div></div>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-card"><div class="chart-title">消費率の月次推移（森崎・佐藤）</div><div class="chart-sub">消費クレジット ÷ 実質支給（要注意: 90%超）</div><div class="chart-wrap"><canvas id="chart-lm-ratio"></canvas></div></div>
+          <div class="chart-card"><div class="chart-title">クレジット消費量の推移</div><div class="chart-sub">ヘビー・スタンダード・ライト別（2名合計）</div><div class="chart-wrap"><canvas id="chart-lm-cr"></canvas></div></div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- AI検証分析 -->
-  <div class="sec">
-    <div class="sec-hdr"><span class="sec-tag tag-ai">AI検証</span><span class="sec-title">検証時間比率分析（中村・大石）</span></div>
-    <div class="sec-body">
-      <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr)">
-        <div class="kpi-card"><div class="kpi-label">中村 平均検証比率</div><div class="kpi-val yellow" id="an-kpi-naka-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
-        <div class="kpi-card"><div class="kpi-label">大石 平均検証比率</div><div class="kpi-val yellow" id="an-kpi-oishi-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
-        <div class="kpi-card"><div class="kpi-label">中村 累計検証時間</div><div class="kpi-val blue" id="an-kpi-naka-total">—</div><div class="kpi-note">全記録月の合計</div></div>
-      </div>
-      <div class="analytics-grid cols1">
-        <div class="chart-card">
-          <div class="chart-title">検証時間比率の月次推移（中村・大石）</div>
-          <div class="chart-sub">検証時間 ÷ 総労働時間（目標ゾーン: 10〜15%）</div>
-          <div class="chart-wrap" style="height:240px"><canvas id="chart-ai-vr"></canvas></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Layermate分析 -->
-  <div class="sec">
-    <div class="sec-hdr"><span class="sec-tag tag-a">Layermate</span><span class="sec-title">クレジット消費分析</span></div>
-    <div class="sec-body">
-      <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr)">
-        <div class="kpi-card"><div class="kpi-label">森崎 平均消費率</div><div class="kpi-val yellow" id="an-kpi-m-ratio">—</div><div class="kpi-note">全記録月平均</div></div>
-        <div class="kpi-card"><div class="kpi-label">佐藤 平均消費率</div><div class="kpi-val yellow" id="an-kpi-s-ratio">—</div><div class="kpi-note">全記録月平均</div></div>
-        <div class="kpi-card"><div class="kpi-label">最高消費率</div><div class="kpi-val red" id="an-kpi-lm-peak">—</div><div class="kpi-note">要注意ライン: 90%</div></div>
-      </div>
-      <div class="analytics-grid">
-        <div class="chart-card">
-          <div class="chart-title">消費率の月次推移（森崎・佐藤）</div>
-          <div class="chart-sub">消費クレジット ÷ 実質支給（要注意: 90%超）</div>
-          <div class="chart-wrap"><canvas id="chart-lm-ratio"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-title">クレジット消費量の推移</div>
-          <div class="chart-sub">ヘビー・スタンダード・ライト別（2名合計）</div>
-          <div class="chart-wrap"><canvas id="chart-lm-cr"></canvas></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <!-- ツール一覧ページ -->
@@ -566,7 +557,7 @@ td input::placeholder{color:var(--dim)}
     </div>
     <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">IXYAS クリエイティブ室</div>
     <h2 style="font-size:20px;font-weight:500;margin-bottom:6px">UIツールモニタリング</h2>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6">検証・運用中のUIツールを選択してください<br><span style="font-size:11px;color:var(--dim)">主に中村・大石が記録を担当します</span></p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6">検証・運用中のUIツールを選択してください<br><span style="font-size:11px;color:var(--muted)">主に中村・大石が記録を担当します</span></p>
     <div style="display:flex;flex-direction:column;gap:10px" id="tool-hub-list">
       <button class="tool-btn" onclick="openTool('layermate')">
         <div class="tool-icon">🔧</div>
@@ -616,7 +607,7 @@ td input::placeholder{color:var(--dim)}
                 <input type="number" id="lm-unit-price" placeholder="49500" oninput="computeLm()" onchange="computeLm()" style="max-width:120px">
                 <span style="font-size:15px;color:var(--muted)">円</span>
               </div>
-              <div style="font-size:11px;color:var(--dim);margin-top:6px">チームプラン固定費・プラン変更時のみ更新</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px">チームプラン固定費・プラン変更時のみ更新</div>
             </div>
             <div class="fld calc" style="grid-column:span 2">
               <div class="fld-num">合計サマリー（自動）</div>
@@ -642,12 +633,12 @@ td input::placeholder{color:var(--dim)}
                 <div>
                   <div style="font-size:11px;color:var(--muted);margin-bottom:4px">1案件あたりコスト（自動）</div>
                   <div class="computed green" id="lm-cost-per-case" style="font-size:22px"><span class="empty">—</span></div>
-                  <div style="font-size:11px;color:var(--dim);margin-top:4px">チームプラン ÷ 総案件数</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px">チームプラン ÷ 総案件数</div>
                 </div>
                 <div>
                   <div style="font-size:11px;color:var(--muted);margin-bottom:4px">総案件数（自動）</div>
                   <div class="computed blue" id="lm-total-cases" style="font-size:22px"><span class="empty">—</span></div>
-                  <div style="font-size:11px;color:var(--dim);margin-top:4px">森崎 ＋ 佐藤</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px">森崎 ＋ 佐藤</div>
                 </div>
               </div>
             </div>
@@ -712,7 +703,7 @@ td input::placeholder{color:var(--dim)}
                 <div class="lm-transfer-row">
                   <span class="lm-row-label">移管（cr）</span>
                   <input type="number" id="lm-s-transfer" placeholder="自動計算" readonly style="color:var(--accent4);background:rgba(255,209,102,.06);cursor:default">
-                  <span style="font-size:11px;color:var(--dim)">森崎と連動</span>
+                  <span style="font-size:11px;color:var(--muted)">森崎と連動</span>
                 </div>
                 <div class="lm-divider"></div>
                 <div class="lm-type-row"><span class="lm-type-label">ヘビー</span>
@@ -803,6 +794,11 @@ function doLogin(name, role) {
   document.getElementById('roi-ui').style.display=role==='roi'?'':'none';
   document.getElementById('ai-ui').style.display=role==='ai'?'':'none';
   renderTabs(); loadFields();
+  // タブラベルをロールに合わせて更新
+  const accumTab=document.getElementById('vtab-accum');
+  if(accumTab)accumTab.textContent='蓄積データ';
+  const anTab=document.getElementById('vtab-analytics');
+  if(anTab)anTab.textContent='分析';
 }
 function doLogout(){if(confirm('ログアウトしますか？'))location.reload();}
 
@@ -817,8 +813,8 @@ async function loadFields(){
     const d=snap.exists?snap.data():{};
     if(currentRole==='roi'){
       ROI_IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
-      const body=document.getElementById('r-ai-body');body.innerHTML='';
-      const rows=d['r-ai-log']||[{}];rows.forEach(addRoiRow);if(!rows.length)addRoiRow({});
+      const body=document.getElementById('r-ai-body');
+      if(body){body.innerHTML='';const rows=d['r-ai-log']||[];rows.forEach(addRoiRow);if(!rows.length)addRoiRow({});}
       bindRoi();
     } else {
       ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
@@ -959,6 +955,7 @@ function computeAi(){
 
 function addRoiRow(r){
   const body=document.getElementById('r-ai-body');
+  if(!body)return;
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input placeholder="例: Runway v3" value="${esc(r.tool||'')}"></td>
     <td><input placeholder="プロンプト・設定" value="${esc(r.prompt||'')}"></td>
@@ -1138,14 +1135,17 @@ async function clearLmMonth(){
 
 
 function switchView(v){
+  const group=currentRole==='roi'?'roi':'team';
   document.getElementById('input-view').style.display=v==='input'?'':'none';
-  document.getElementById('accum-view').style.display=v==='accum'?'':'none';
+  document.getElementById('accum-roi-view').style.display=(v==='accum'&&group==='roi')?'':'none';
+  document.getElementById('accum-team-view').style.display=(v==='accum'&&group==='team')?'':'none';
   document.getElementById('analytic-view').style.display=v==='analytics'?'':'none';
-  document.getElementById('vtab-input').className='vtab'+(v==='input'?' active':'');
-  document.getElementById('vtab-accum').className='vtab'+(v==='accum'?' active':'');
-  document.getElementById('vtab-analytics').className='vtab'+(v==='analytics'?' active':'');
-  if(v==='accum')renderAccum();
-  if(v==='analytics')renderAnalytics();
+  ['input','accum','analytics'].forEach(id=>{
+    const el=document.getElementById('vtab-'+id);
+    if(el)el.className='vtab'+(v===id?' active':'');
+  });
+  if(v==='accum')renderAccum(group);
+  if(v==='analytics')renderAnalytics(group);
 }
 
 function openToolHub(){
@@ -1162,6 +1162,7 @@ function openTool(toolId){
   const mm=String(now.getMonth()+1).padStart(2,'0');
   const idx=MKEYS.indexOf(mm);
   if(idx!==-1)lmMonth=idx;
+  const _now=new Date();const _mm=String(_now.getMonth()+1).padStart(2,'0');const _idx=MKEYS.indexOf(_mm);if(_idx!==-1)lmMonth=_idx;
   renderLmTabs();loadLmFields();
 }
 
@@ -1178,144 +1179,168 @@ function backToLogin(){
 }
 
 // ── 蓄積データ ──
-async function renderAccum(){
-  document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込み中...</div>';
-  document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込み中...</div>';
-  document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込み中...</div>';
-  document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込み中...</div>';
-  // ── dashboard（ROI・AI検証）──
-  try{
-    const snap=await db.collection('dashboard').get();
-    const allDocs=[];
-    snap.forEach(doc=>allDocs.push(doc.data()));
-
-    const now=new Date();
-    const fiscalStartYear=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1;
-    const monthYear=(mk)=>parseInt(mk)>=4?fiscalStartYear:fiscalStartYear+1;
-    const monthLabel=(mk)=>{const mi=MKEYS.indexOf(mk);return `${monthYear(mk)}年 ${MONTHS[mi]||mk}`;};
-
-    const roiDocs=allDocs.filter(d=>d._user==='小野寺').sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
-    const roiWrap=document.getElementById('accum-roi');
-    if(!roiDocs.length){roiWrap.innerHTML='<div class="no-data">まだデータがありません</div>';}
-    else{
-      roiWrap.innerHTML=`<table class="accum-table">
-        <thead><tr><th>月</th><th>制作時間</th><th>本数</th><th>AI使用</th><th>1本あたり</th><th>Firefly/本</th><th>受注フィー</th><th>粗利</th><th>検証比率</th></tr></thead>
-        <tbody>${roiDocs.map(d=>{
-          const th=parseFloat(d['r-total-hours'])||0,tv=parseFloat(d['r-total-videos'])||0,
-                av=parseFloat(d['r-ai-videos'])||0,fm=parseFloat(d['r-firefly'])||0,
-                hr=parseFloat(d['r-hourly'])||0,fee=parseFloat(d['r-fee'])||0,
-                cs=parseFloat(d['r-cs'])||0,tw=parseFloat(d['r-total-work'])||0,vh=parseFloat(d['r-verify-h'])||0;
-          const pv=tv>0?th/tv:null,fpv=av>0?fm/av:null,
-                cost=th*hr+fm+cs*hr,gross=fee>0?fee-cost:null,vr=tw>0?vh/tw*100:null;
-          return`<tr>
-            <td class="col-month">${monthLabel(d._month)}</td>
-            <td>${th?th+'h':'—'}</td><td>${tv||'—'}</td><td>${av||'—'}</td>
-            <td>${pv!==null?(pv%1===0?pv:pv.toFixed(1))+'h':'—'}</td>
-            <td>${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
-            <td>${fee?'¥'+fee.toLocaleString():'—'}</td>
-            <td class="${gross===null?'':(gross>=0?'col-pos':'col-neg')}">${gross!==null?'¥'+Math.round(gross).toLocaleString():'—'}</td>
-            <td class="${vr===null?'':(vr>15?'col-neg':vr>=10?'col-warn':'col-pos')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
-          </tr>`;
-        }).join('')}</tbody></table>`;
-    }
-
-    ['中村','大石'].forEach(name=>{
-      const wrapId=name==='中村'?'accum-ai-nakamura':'accum-ai-oishi';
-      const wrap=document.getElementById(wrapId);
-      const docs=allDocs.filter(d=>d._user===name).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
-      if(!docs.length){wrap.innerHTML='<div class="no-data">まだデータがありません</div>';return;}
-      const rows=docs.map(d=>{
-        const mi=MKEYS.indexOf(d._month);
-        const tw=parseFloat(d['a-total-work'])||0;
-        const entries=d['a-entries']||[];
-        const entryTotal=entries.reduce((s,e)=>s+(parseFloat(e.time)||0),0);
-        const totalVerify=entryTotal>0?entryTotal:(parseFloat(d['a-verify-h'])||0);
-        const vr=tw>0&&totalVerify>0?totalVerify/tw*100:null;
-        const combined=entries.map((e,i)=>{
-          const text=e.content||(([e.tool,e.prompt,e.note].filter(Boolean).join(' / '))||'');
-          return text?`<span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
-        }).filter(Boolean).join('<br><br>');
-        return`<tr>
-          <td class="col-month" style="vertical-align:top;padding-top:14px;white-space:nowrap">${monthLabel(d._month)}</td>
-          <td style="vertical-align:top;padding-top:14px;font-family:'DM Mono',monospace">${totalVerify?totalVerify+'h':'—'}</td>
-          <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-pos':vr>=10?'col-warn':'')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
-          <td style="white-space:normal;line-height:1.8;padding:12px 16px">${combined||'—'}</td>
-        </tr>`;
-      }).join('');
-      wrap.innerHTML=`<table class="accum-table">
-        <colgroup><col style="width:120px"><col style="width:130px"><col style="width:120px"><col></colgroup>
-        <thead><tr><th>月</th><th>検証時間合計</th><th>検証比率</th><th>調査内容</th></tr></thead>
-        <tbody>${rows}</tbody></table>`;
-    });
-  }catch(e){
-    document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込みエラー</div>';
-    document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込みエラー</div>';
-    document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込みエラー</div>';
-    console.error('dashboard読み込みエラー:',e);
+async function renderAccum(group){
+  if(!group)group=currentRole==='roi'?'roi':'team';
+  if(group==='roi'){
+    document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込み中...</div>';
+  } else {
+    document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込み中...</div>';
+    document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込み中...</div>';
+    document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込み中...</div>';
   }
 
-  // ── layermate（独立したtry/catch）──
-  try{
-    const now2=new Date();
-    const fiscalStartYear2=now2.getMonth()>=3?now2.getFullYear():now2.getFullYear()-1;
-    const monthYear2=(mk)=>parseInt(mk)>=4?fiscalStartYear2:fiscalStartYear2+1;
-    const monthLabel2=(mk)=>{const mi=MKEYS.indexOf(mk);return `${monthYear2(mk)}年 ${MONTHS[mi]||mk}`;};
-    const lmSnap=await db.collection('layermate').get();
-    const lmAllDocs=[];lmSnap.forEach(doc=>lmAllDocs.push(doc.data()));
-    const lmDocs=lmAllDocs.filter(d=>d['lm-grant']).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
-    const lmWrap=document.getElementById('accum-lm');
-    if(!lmDocs.length){lmWrap.innerHTML='<div class="no-data">まだデータがありません</div>';}
-    else{
-      const lmRows=lmDocs.map(d=>{
-        const grant=parseFloat(d['lm-grant'])||0;
-        const mTransfer=parseFloat(d['lm-m-transfer'])||0;
-        const sTransfer=parseFloat(d['lm-s-transfer'])||0;
-        const mGrant=grant+mTransfer, sGrant=grant+sTransfer;
-        const mCr=(parseFloat(d['lm-m-h-cr'])||0)+(parseFloat(d['lm-m-s-cr'])||0)+(parseFloat(d['lm-m-l-cr'])||0);
-        const sCr=(parseFloat(d['lm-s-h-cr'])||0)+(parseFloat(d['lm-s-s-cr'])||0)+(parseFloat(d['lm-s-l-cr'])||0);
-        const mRatio=mGrant>0?mCr/mGrant*100:null;
-        const sRatio=sGrant>0?sCr/sGrant*100:null;
-        const mCnt=(parseFloat(d['lm-m-h-cnt'])||0)+(parseFloat(d['lm-m-s-cnt'])||0)+(parseFloat(d['lm-m-l-cnt'])||0);
-        const sCnt=(parseFloat(d['lm-s-h-cnt'])||0)+(parseFloat(d['lm-s-s-cnt'])||0)+(parseFloat(d['lm-s-l-cnt'])||0);
-        const rc=(r)=>r===null?'':(r>90?'col-neg':r>70?'col-warn':'col-pos');
-        return`<tr>
-          <td class="col-month">${monthLabel2(d._month)}</td>
-          <td>${grant?grant+'cr':'—'}</td>
-          <td>${mGrant+'cr'}${mTransfer?` (${mTransfer>0?'+':''}${mTransfer})`:''}</td>
-          <td>${mCnt||'—'}</td><td>${mCr?mCr+'cr':'—'}</td>
-          <td class="${rc(mRatio)}">${mRatio!==null?mRatio.toFixed(1)+'%':'—'}</td>
-          <td>${sGrant+'cr'}${sTransfer?` (${sTransfer>0?'+':''}${sTransfer})`:''}</td>
-          <td>${sCnt||'—'}</td><td>${sCr?sCr+'cr':'—'}</td>
-          <td class="${rc(sRatio)}">${sRatio!==null?sRatio.toFixed(1)+'%':'—'}</td>
-          <td style="white-space:normal;max-width:200px;line-height:1.6">${d['lm-memo']||'—'}</td>
-        </tr>`;
-      }).join('');
-      lmWrap.innerHTML=`<table class="accum-table">
-        <thead><tr><th>月</th><th>付与(cr)</th><th>森崎 実質支給</th><th>森崎 案件数</th><th>森崎 消費</th><th>森崎 消費率</th><th>佐藤 実質支給</th><th>佐藤 案件数</th><th>佐藤 消費</th><th>佐藤 消費率</th><th>傾向・所感</th></tr></thead>
-        <tbody>${lmRows}</tbody></table>`;
+  const now=new Date();
+  const fiscalStartYear=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1;
+  const monthYear=(mk)=>parseInt(mk)>=4?fiscalStartYear:fiscalStartYear+1;
+  const monthLabel=(mk)=>{const mi=MKEYS.indexOf(mk);return `${monthYear(mk)}年 ${MONTHS[mi]||mk}`;};
+
+  // ── ROI ──
+  if(group==='roi'){
+    try{
+      const snap=await db.collection('dashboard').get();
+      const allDocs=[];
+      snap.forEach(doc=>allDocs.push(doc.data()));
+      const roiDocs=allDocs.filter(d=>d._user==='小野寺').sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
+      const roiWrap=document.getElementById('accum-roi');
+      if(!roiDocs.length){
+        roiWrap.innerHTML='<div class="no-data">まだデータがありません</div>';
+      } else {
+        roiWrap.innerHTML=`<table class="accum-table">
+          <thead><tr><th>月</th><th>制作時間</th><th>本数</th><th>AI使用</th><th>1本あたり</th><th>Firefly/本</th><th>受注フィー</th><th>粗利</th><th>検証比率</th></tr></thead>
+          <tbody>${roiDocs.map(d=>{
+            const th=parseFloat(d['r-total-hours'])||0,tv=parseFloat(d['r-total-videos'])||0,
+                  av=parseFloat(d['r-ai-videos'])||0,fm=parseFloat(d['r-firefly'])||0,
+                  hr=parseFloat(d['r-hourly'])||0,fee=parseFloat(d['r-fee'])||0,
+                  cs=parseFloat(d['r-cs'])||0,tw=parseFloat(d['r-total-work'])||0,vh=parseFloat(d['r-verify-h'])||0;
+            const pv=tv>0?th/tv:null,fpv=av>0?fm/av:null,
+                  cost=th*hr+fm+cs*hr,gross=fee>0?fee-cost:null,vr=tw>0?vh/tw*100:null;
+            return`<tr>
+              <td class="col-month">${monthLabel(d._month)}</td>
+              <td>${th?th+'h':'—'}</td><td>${tv||'—'}</td><td>${av||'—'}</td>
+              <td>${pv!==null?(pv%1===0?pv:pv.toFixed(1))+'h':'—'}</td>
+              <td>${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
+              <td>${fee?'¥'+fee.toLocaleString():'—'}</td>
+              <td class="${gross===null?'':(gross>=0?'col-pos':'col-neg')}">${gross!==null?'¥'+Math.round(gross).toLocaleString():'—'}</td>
+              <td class="${vr===null?'':(vr>15?'col-neg':vr>=10?'col-warn':'col-pos')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
+            </tr>`;
+          }).join('')}</tbody></table>`;
+      }
+    }catch(e){
+      document.getElementById('accum-roi').innerHTML='<div class="no-data">読み込みエラー</div>';
+      console.error('dashboard読み込みエラー:',e);
     }
-  }catch(e){
-    document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込みエラー</div>';
-    console.error('layermate読み込みエラー:',e);
+  }
+
+  // ── 中村・大石・Layermate ──
+  if(group==='team'){
+    try{
+      const snap=await db.collection('dashboard').get();
+      const allDocs=[];
+      snap.forEach(doc=>allDocs.push(doc.data()));
+      ['中村','大石'].forEach(name=>{
+        const wrapId=name==='中村'?'accum-ai-nakamura':'accum-ai-oishi';
+        const wrap=document.getElementById(wrapId);
+        const docs=allDocs.filter(d=>d._user===name).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
+        if(!docs.length){wrap.innerHTML='<div class="no-data">まだデータがありません</div>';return;}
+        const rows=docs.map(d=>{
+          const tw=parseFloat(d['a-total-work'])||0;
+          const entries=d['a-entries']||[];
+          const entryTotal=entries.reduce((s,e)=>s+(parseFloat(e.time)||0),0);
+          const totalVerify=entryTotal>0?entryTotal:(parseFloat(d['a-verify-h'])||0);
+          const vr=tw>0&&totalVerify>0?totalVerify/tw*100:null;
+          const combined=entries.map((e,i)=>{
+            const text=e.content||(([e.tool,e.prompt,e.note].filter(Boolean).join(' / '))||'');
+            return text?`<span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
+          }).filter(Boolean).join('<br><br>');
+          return`<tr>
+            <td class="col-month" style="vertical-align:top;padding-top:14px;white-space:nowrap">${monthLabel(d._month)}</td>
+            <td style="vertical-align:top;padding-top:14px;font-family:'DM Mono',monospace">${totalVerify?totalVerify+'h':'—'}</td>
+            <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-pos':vr>=10?'col-warn':'')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
+            <td style="white-space:normal;line-height:1.8;padding:12px 16px">${combined||'—'}</td>
+          </tr>`;
+        }).join('');
+        wrap.innerHTML=`<table class="accum-table">
+          <colgroup><col style="width:120px"><col style="width:130px"><col style="width:120px"><col></colgroup>
+          <thead><tr><th>月</th><th>検証時間合計</th><th>検証比率</th><th>調査内容</th></tr></thead>
+          <tbody>${rows}</tbody></table>`;
+      });
+    }catch(e){
+      document.getElementById('accum-ai-nakamura').innerHTML='<div class="no-data">読み込みエラー</div>';
+      document.getElementById('accum-ai-oishi').innerHTML='<div class="no-data">読み込みエラー</div>';
+      console.error('dashboard読み込みエラー:',e);
+    }
+
+    // Layermate
+    try{
+      const lmSnap=await db.collection('layermate').get();
+      const lmAllDocs=[];lmSnap.forEach(doc=>lmAllDocs.push(doc.data()));
+      const lmDocs=lmAllDocs.filter(d=>d['lm-grant']).sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
+      const lmWrap=document.getElementById('accum-lm');
+      if(!lmDocs.length){
+        lmWrap.innerHTML='<div class="no-data">まだデータがありません</div>';
+      } else {
+        const lmCards=lmDocs.map(d=>{
+          const grant=parseFloat(d['lm-grant'])||0;
+          const mTransfer=parseFloat(d['lm-m-transfer'])||0;
+          const sTransfer=parseFloat(d['lm-s-transfer'])||0;
+          const mGrant=grant+mTransfer, sGrant=grant+sTransfer;
+          const mCr=(parseFloat(d['lm-m-h-cr'])||0)+(parseFloat(d['lm-m-s-cr'])||0)+(parseFloat(d['lm-m-l-cr'])||0);
+          const sCr=(parseFloat(d['lm-s-h-cr'])||0)+(parseFloat(d['lm-s-s-cr'])||0)+(parseFloat(d['lm-s-l-cr'])||0);
+          const mRatio=mGrant>0?mCr/mGrant*100:null;
+          const sRatio=sGrant>0?sCr/sGrant*100:null;
+          const mCnt=(parseFloat(d['lm-m-h-cnt'])||0)+(parseFloat(d['lm-m-s-cnt'])||0)+(parseFloat(d['lm-m-l-cnt'])||0);
+          const sCnt=(parseFloat(d['lm-s-h-cnt'])||0)+(parseFloat(d['lm-s-s-cnt'])||0)+(parseFloat(d['lm-s-l-cnt'])||0);
+          const rc=(r)=>r===null?'':(r>90?'col-neg':r>70?'col-warn':'col-pos');
+          const tf=(val,base)=>val!==0?`<span class="lm-accum-transfer">(${val>0?'+':''}${val})</span>`:'';
+          const person=(name,pg,pt,pc,pcnt,pr)=>`
+            <div class="lm-accum-person">
+              <div class="lm-accum-pname">${name}</div>
+              <div class="lm-accum-row">
+                <span class="lm-accum-rlabel">実質支給</span>
+                <span class="lm-accum-rval">${pg}cr${tf(pt)}</span>
+              </div>
+              <div class="lm-accum-row">
+                <span class="lm-accum-rlabel">案件数</span>
+                <span class="lm-accum-rval">${pcnt||'—'}</span>
+              </div>
+              <div class="lm-accum-row">
+                <span class="lm-accum-rlabel">消費</span>
+                <span class="lm-accum-rval">${pc?pc+'cr':'—'}</span>
+              </div>
+              <div class="lm-accum-row">
+                <span class="lm-accum-rlabel">消費率</span>
+                <span class="lm-accum-rval ${rc(pr)}">${pr!==null?pr.toFixed(1)+'%':'—'}</span>
+              </div>
+            </div>`;
+          return`<div class="lm-accum-card">
+            <div class="lm-accum-hdr">
+              <span class="lm-accum-month">${monthLabel(d._month)}</span>
+              <span class="lm-accum-grant">付与 ${grant?grant+'cr':'—'}</span>
+            </div>
+            <div class="lm-accum-body">
+              ${person('森崎',mGrant,mTransfer,mCr,mCnt,mRatio)}
+              ${person('佐藤',sGrant,sTransfer,sCr,sCnt,sRatio)}
+            </div>
+            ${d['lm-memo']?`<div class="lm-accum-memo"><div class="lm-accum-memo-label">傾向・所感</div>${d['lm-memo']}</div>`:''}
+          </div>`;
+        }).join('');
+        lmWrap.innerHTML=lmCards;
+      }
+    }catch(e){
+      document.getElementById('accum-lm').innerHTML='<div class="no-data">読み込みエラー</div>';
+      console.error('layermate読み込みエラー:',e);
+    }
   }
 }
 
 // ── 分析ビュー ──
 let _charts={};
-function _mkChart(id,cfg){
-  if(_charts[id]){_charts[id].destroy();}
-  const el=document.getElementById(id);if(!el)return;
-  _charts[id]=new Chart(el,cfg);
-}
-function _cDef(){
-  Chart.defaults.color='#6b7080';
-  Chart.defaults.borderColor='#2a2d38';
-  Chart.defaults.font.family="'DM Mono',monospace";
-  Chart.defaults.font.size=11;
-}
+function _mkChart(id,cfg){if(_charts[id]){_charts[id].destroy();}const el=document.getElementById(id);if(!el)return;_charts[id]=new Chart(el,cfg);}
+function _cDef(){Chart.defaults.color='#6b7080';Chart.defaults.borderColor='#2a2d38';Chart.defaults.font.family="'DM Mono',monospace";Chart.defaults.font.size=11;}
 function _v(d,k){return parseFloat(d[k])||0;}
 
-async function renderAnalytics(){
+async function renderAnalytics(group){
+  if(!group)group=currentRole==='roi'?'roi':'team';
   _cDef();
   const now=new Date();
   const fy=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1;
@@ -1323,9 +1348,17 @@ async function renderAnalytics(){
   const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#2a2d38'}},x:{grid:{color:'rgba(42,45,56,.4)'}}}};
   const set=(id,v,cls)=>{const e=document.getElementById(id);if(!e)return;e.textContent=v;if(cls)e.className='kpi-val '+cls;};
   const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
-  const noData=id=>{const e=document.getElementById(id);if(e)e.closest('.chart-wrap').innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:13px">データなし</div>';};
+  const noData=id=>{const el=document.getElementById(id);if(el){const w=el.closest('.chart-wrap');if(w)w.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:13px">データなし</div>';}};
 
-  // ── ROI＋AI検証（dashboard） ──
+  // ROIセクション表示制御
+  const anRoi=document.querySelector('#analytic-view .sec:nth-child(1)');
+  const anAi=document.querySelector('#analytic-view .sec:nth-child(2)');
+  const anLm=document.querySelector('#analytic-view .sec:nth-child(3)');
+  if(anRoi)anRoi.style.display=group==='roi'?'':'none';
+  if(anAi)anAi.style.display=group==='team'?'':'none';
+  if(anLm)anLm.style.display=group==='team'?'':'none';
+
+  // ROI + AI検証
   try{
     const snap=await db.collection('dashboard').get();
     const all=[];snap.forEach(doc=>all.push(doc.data()));
@@ -1333,7 +1366,6 @@ async function renderAnalytics(){
     const naka=all.filter(d=>d._user==='中村').sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
     const oishi=all.filter(d=>d._user==='大石').sort((a,b)=>MKEYS.indexOf(a._month)-MKEYS.indexOf(b._month));
 
-    // ROI KPI
     if(roi.length){
       const labels=roi.map(d=>ml(d._month));
       const grossArr=roi.map(d=>{const th=_v(d,'r-total-hours'),hr=_v(d,'r-hourly'),fm=_v(d,'r-firefly'),cs=_v(d,'r-cs'),csHr=_v(d,'r-cs-hourly'),fee=_v(d,'r-fee');return fee>0?fee-(th*hr+fm+cs*csHr):null;});
@@ -1341,26 +1373,19 @@ async function renderAnalytics(){
       const pvhArr=roi.map(d=>{const th=_v(d,'r-total-hours'),tv=_v(d,'r-total-videos');return tv>0?th/tv:null;});
       const laborArr=roi.map(d=>_v(d,'r-total-hours')*_v(d,'r-hourly')+_v(d,'r-cs')*_v(d,'r-cs-hourly'));
       const ffArr=roi.map(d=>_v(d,'r-firefly'));
-      const vg=grossArr.filter(v=>v!==null),vvr=vrArr.filter(v=>v!==null),vpvh=pvhArr.filter(v=>v!==null);
       const grateArr=roi.map(d=>{const th=_v(d,'r-total-hours'),hr=_v(d,'r-hourly'),fm=_v(d,'r-firefly'),cs=_v(d,'r-cs'),csHr=_v(d,'r-cs-hourly'),fee=_v(d,'r-fee');if(!fee)return null;return(fee-(th*hr+fm+cs*csHr))/fee*100;}).filter(v=>v!==null);
+      const vg=grossArr.filter(v=>v!==null),vvr=vrArr.filter(v=>v!==null),vpvh=pvhArr.filter(v=>v!==null);
       set('an-kpi-gross',vg.length?'¥'+Math.round(vg.reduce((a,b)=>a+b,0)).toLocaleString():'—','blue');
       set('an-kpi-grate',grateArr.length?avg(grateArr).toFixed(1)+'%':'—','green');
       set('an-kpi-pvh',vpvh.length?avg(vpvh).toFixed(1)+'h':'—','blue');
       const vrA=avg(vvr);const vrKpi=document.getElementById('an-kpi-vr');
       if(vrKpi&&vrA!==null){vrKpi.textContent=vrA.toFixed(1)+'%';vrKpi.className='kpi-val '+(vrA>15?'red':vrA>=10?'yellow':'green');}
-      // 粗利グラフ
       _mkChart('chart-gross',{type:'bar',data:{labels,datasets:[{data:grossArr.map(v=>v??0),backgroundColor:grossArr.map(v=>v===null?'#2a2d38':v>=0?'rgba(61,255,200,.5)':'rgba(255,107,107,.5)'),borderColor:grossArr.map(v=>v===null?'transparent':v>=0?'#3dffc8':'#ff6b6b'),borderWidth:1,borderRadius:4}]},options:{...co,plugins:{...co.plugins,tooltip:{callbacks:{label:ctx=>'¥'+Math.round(ctx.raw).toLocaleString()}}},scales:{y:{...co.scales.y,ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
-      // 検証比率グラフ
-      _mkChart('chart-vr',{type:'line',data:{labels,datasets:[{data:vrArr,borderColor:'#3dffc8',backgroundColor:'rgba(61,255,200,.08)',tension:.3,spanGaps:true,pointRadius:4,fill:true}]},options:{...co,scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}}}}}); 
-      // 1本あたり制作時間
+      _mkChart('chart-vr',{type:'line',data:{labels,datasets:[{data:vrArr,borderColor:'#3dffc8',backgroundColor:'rgba(61,255,200,.08)',tension:.3,spanGaps:true,pointRadius:4,fill:true}]},options:{...co,scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}}}}});
       _mkChart('chart-pvh',{type:'bar',data:{labels,datasets:[{data:pvhArr.map(v=>v??0),backgroundColor:'rgba(91,143,255,.5)',borderColor:'#5b8fff',borderWidth:1,borderRadius:4}]},options:{...co,scales:{y:{...co.scales.y,ticks:{callback:v=>v+'h'}}}}});
-      // コスト構成
       _mkChart('chart-cost',{type:'bar',data:{labels,datasets:[{label:'人件費',data:laborArr,backgroundColor:'rgba(91,143,255,.55)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'Firefly',data:ffArr,backgroundColor:'rgba(255,209,102,.55)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{stacked:true,grid:{color:'rgba(42,45,56,.4)'}},y:{stacked:true,grid:{color:'#2a2d38'},ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
-    } else {
-      ['chart-gross','chart-vr','chart-pvh','chart-cost'].forEach(noData);
-    }
+    } else { ['chart-gross','chart-vr','chart-pvh','chart-cost'].forEach(noData); }
 
-    // AI検証 KPI＋グラフ
     const getVr=(docs,mk)=>{const d=docs.find(x=>x._month===mk);if(!d)return null;const tw=_v(d,'a-total-work');const e=d['a-entries']||[];const t=e.reduce((s,ee)=>s+(parseFloat(ee.time)||0),0)||_v(d,'a-verify-h');return tw>0&&t>0?t/tw*100:null;};
     const allAiM=[...new Set([...naka.map(d=>d._month),...oishi.map(d=>d._month)])].sort((a,b)=>MKEYS.indexOf(a)-MKEYS.indexOf(b));
     const nakaVrs=allAiM.map(mk=>getVr(naka,mk)),oishiVrs=allAiM.map(mk=>getVr(oishi,mk));
@@ -1369,12 +1394,10 @@ async function renderAnalytics(){
     set('an-kpi-naka-vr',nakaAvg!==null?nakaAvg.toFixed(1)+'%':'—',nakaAvg===null?'':nakaAvg>15?'red':nakaAvg>=10?'yellow':'green');
     set('an-kpi-oishi-vr',oishiAvg!==null?oishiAvg.toFixed(1)+'%':'—',oishiAvg===null?'':oishiAvg>15?'red':oishiAvg>=10?'yellow':'green');
     set('an-kpi-naka-total',nakaTot?nakaTot+'h':'—','blue');
-    if(allAiM.length){
-      _mkChart('chart-ai-vr',{type:'line',data:{labels:allAiM.map(mk=>ml(mk)),datasets:[{label:'中村',data:nakaVrs,borderColor:'#ffd166',backgroundColor:'rgba(255,209,102,.08)',tension:.3,spanGaps:true,pointRadius:4},{label:'大石',data:oishiVrs,borderColor:'#5b8fff',backgroundColor:'rgba(91,143,255,.08)',tension:.3,spanGaps:true,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{y:{min:0,grid:{color:'#2a2d38'},ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}},x:{grid:{color:'rgba(42,45,56,.4)'}}}}});
-    } else { noData('chart-ai-vr'); }
+    if(allAiM.length){_mkChart('chart-ai-vr',{type:'line',data:{labels:allAiM.map(mk=>ml(mk)),datasets:[{label:'中村',data:nakaVrs,borderColor:'#ffd166',backgroundColor:'rgba(255,209,102,.08)',tension:.3,spanGaps:true,pointRadius:4},{label:'大石',data:oishiVrs,borderColor:'#5b8fff',backgroundColor:'rgba(91,143,255,.08)',tension:.3,spanGaps:true,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{y:{min:0,grid:{color:'#2a2d38'},ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}},x:{grid:{color:'rgba(42,45,56,.4)'}}}}}); } else { noData('chart-ai-vr'); }
   }catch(e){console.error('dashboard分析エラー:',e);}
 
-  // ── Layermate ──
+  // Layermate
   try{
     const snap=await db.collection('layermate').get();
     const lmAll=[];snap.forEach(doc=>lmAll.push(doc.data()));
