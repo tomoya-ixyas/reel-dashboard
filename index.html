@@ -260,8 +260,8 @@ td input::placeholder{color:var(--dim)}
 .kpi-note{font-size:13px;color:var(--muted);margin-top:4px}
 
 /* ── Layermate蓄積カード ── */
-.lm-accum-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
-.lm-accum-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface)}
+.lm-accum-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.lm-accum-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface2)}
 .lm-accum-month{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:var(--text)}
 .lm-accum-grant{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--muted)}
 .lm-accum-body{display:grid;grid-template-columns:1fr 1fr}
@@ -276,7 +276,7 @@ td input::placeholder{color:var(--dim)}
 .lm-accum-rval.col-warn{color:var(--accent4)}
 .lm-accum-rval.col-neg{color:var(--accent3)}
 .lm-accum-transfer{font-size:12px;color:var(--muted);margin-left:4px}
-.lm-accum-memo{padding:10px 18px;border-top:1px solid var(--border);font-size:14px;color:var(--muted);line-height:1.7;background:var(--surface2)}
+.lm-accum-memo{padding:10px 18px;border-top:1px solid var(--border);font-size:14px;color:var(--muted);line-height:1.7;background:var(--surface)}
 .lm-accum-memo-label{font-size:12px;color:var(--muted);margin-bottom:4px;letter-spacing:.06em}
 </style>
 </head>
@@ -1238,22 +1238,38 @@ async function renderAccum(group){
         roiWrap.innerHTML='<div class="no-data">まだデータがありません</div>';
       } else {
         roiWrap.innerHTML=`<table class="accum-table">
-          <thead><tr><th>月</th><th>制作時間</th><th>本数</th><th>AI使用</th><th>1本あたり</th><th>Firefly/本</th><th>受注フィー</th><th>粗利</th><th>検証比率</th></tr></thead>
+          <colgroup><col style="width:140px"><col style="width:90px"><col style="width:70px"><col style="width:70px"><col style="width:90px"><col style="width:100px"><col style="width:110px"><col style="width:110px"><col style="width:90px"><col></colgroup>
+          <thead><tr><th>月</th><th>制作時間</th><th>本数</th><th>AI使用</th><th>1本あたり</th><th>Firefly/本</th><th>受注フィー</th><th>粗利</th><th>粗利率</th><th>検証比率</th><th>AI検証ログ / メモ</th></tr></thead>
           <tbody>${roiDocs.map(d=>{
             const th=parseFloat(d['r-total-hours'])||0,tv=parseFloat(d['r-total-videos'])||0,
                   av=parseFloat(d['r-ai-videos'])||0,fm=parseFloat(d['r-firefly'])||0,
-                  hr=parseFloat(d['r-hourly'])||0,fee=parseFloat(d['r-fee'])||0,
+                  hr=parseFloat(d['r-hourly'])||0,csHr=parseFloat(d['r-cs-hourly'])||0,
+                  fee=parseFloat(d['r-fee'])||0,
                   cs=parseFloat(d['r-cs'])||0,tw=parseFloat(d['r-total-work'])||0,vh=parseFloat(d['r-verify-h'])||0;
             const pv=tv>0?th/tv:null,fpv=av>0?fm/av:null,
-                  cost=th*hr+fm+cs*hr,gross=fee>0?fee-cost:null,vr=tw>0?vh/tw*100:null;
+                  cost=th*hr+fm+cs*csHr,gross=fee>0?fee-cost:null,
+                  grossRate=gross!==null&&fee>0?gross/fee*100:null,
+                  vr=tw>0?vh/tw*100:null;
+            const aiLog=(d['r-ai-log']||[]).filter(r=>r.tool||r.prompt||r.note);
+            const logHtml=aiLog.length?aiLog.map(r=>{
+              const evalColor=r.eval_==='◎'?'col-pos':r.eval_==='×'?'col-neg':r.eval_==='○'?'col-warn':'';
+              const parts=[r.tool&&`<span style="font-weight:500">${r.tool}</span>`,r.prompt,r.eval_&&`<span class="${evalColor}">${r.eval_}</span>`,r.note].filter(Boolean);
+              return`<div style="font-size:12px;line-height:1.7;padding:2px 0;border-bottom:1px solid var(--border)">${parts.join(' · ')}</div>`;
+            }).join(''):'';
+            const memoHtml=d['r-memo']?`<div style="font-size:12px;color:var(--muted);margin-top:${aiLog.length?'6px':'0'};line-height:1.7">${d['r-memo']}</div>`:'';
+            const notesCell=logHtml||memoHtml?`${logHtml}${memoHtml}`:'—';
             return`<tr>
-              <td class="col-month">${monthLabel(d._month)}</td>
-              <td>${th?th+'h':'—'}</td><td>${tv||'—'}</td><td>${av||'—'}</td>
-              <td>${pv!==null?(pv%1===0?pv:pv.toFixed(1))+'h':'—'}</td>
-              <td>${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
-              <td>${fee?'¥'+fee.toLocaleString():'—'}</td>
-              <td class="${gross===null?'':(gross>=0?'col-pos':'col-neg')}">${gross!==null?'¥'+Math.round(gross).toLocaleString():'—'}</td>
-              <td class="${vr===null?'':(vr>15?'col-neg':vr>=10?'col-warn':'col-pos')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
+              <td class="col-month" style="vertical-align:top;padding-top:14px;white-space:nowrap">${monthLabel(d._month)}</td>
+              <td style="vertical-align:top;padding-top:14px">${th?th+'h':'—'}</td>
+              <td style="vertical-align:top;padding-top:14px">${tv||'—'}</td>
+              <td style="vertical-align:top;padding-top:14px">${av||'—'}</td>
+              <td style="vertical-align:top;padding-top:14px">${pv!==null?(pv%1===0?pv:pv.toFixed(1))+'h':'—'}</td>
+              <td style="vertical-align:top;padding-top:14px">${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
+              <td style="vertical-align:top;padding-top:14px">${fee?'¥'+fee.toLocaleString():'—'}</td>
+              <td style="vertical-align:top;padding-top:14px" class="${gross===null?'':(gross>=0?'col-pos':'col-neg')}">${gross!==null?'¥'+Math.round(gross).toLocaleString():'—'}</td>
+              <td style="vertical-align:top;padding-top:14px" class="${grossRate===null?'':(grossRate>=40?'col-pos':grossRate>=20?'col-warn':'col-neg')}">${grossRate!==null?grossRate.toFixed(1)+'%':'—'}</td>
+              <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-neg':vr>=10?'col-warn':'col-pos')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
+              <td style="white-space:normal;padding:12px 16px;vertical-align:top">${notesCell}</td>
             </tr>`;
           }).join('')}</tbody></table>`;
       }
@@ -1276,13 +1292,14 @@ async function renderAccum(group){
         if(!docs.length){wrap.innerHTML='<div class="no-data">まだデータがありません</div>';return;}
         const rows=docs.map(d=>{
           const tw=parseFloat(d['a-total-work'])||0;
-          const entries=d['a-entries']||[];
+          const entry=d['a-entry']||(d['a-entries']&&d['a-entries'][0])||null;
+          const entries=entry?[entry]:(d['a-entries']||[]);
           const entryTotal=entries.reduce((s,e)=>s+(parseFloat(e.time)||0),0);
           const totalVerify=entryTotal>0?entryTotal:(parseFloat(d['a-verify-h'])||0);
           const vr=tw>0&&totalVerify>0?totalVerify/tw*100:null;
           const combined=entries.map((e,i)=>{
             const text=e.content||(([e.tool,e.prompt,e.note].filter(Boolean).join(' / '))||'');
-            return text?`<span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
+            return text?`<span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px">${e.time?e.time+'h':''}</span> ${text}`:'';
           }).filter(Boolean).join('<br><br>');
           return`<tr>
             <td class="col-month" style="vertical-align:top;padding-top:14px;white-space:nowrap">${monthLabel(d._month)}</td>
@@ -1418,11 +1435,11 @@ async function renderAnalytics(group){
       _mkChart('chart-cost',{type:'bar',data:{labels,datasets:[{label:'人件費',data:laborArr,backgroundColor:'rgba(0,128,85,.55)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'Firefly',data:ffArr,backgroundColor:'rgba(224,120,0,.55)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{stacked:true,grid:{color:'rgba(201,222,224,.6)'}},y:{stacked:true,grid:{color:'#c9dee0'},ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
     } else { ['chart-gross','chart-vr','chart-pvh','chart-cost'].forEach(noData); }
 
-    const getVr=(docs,mk)=>{const d=docs.find(x=>x._month===mk);if(!d)return null;const tw=_v(d,'a-total-work');const e=d['a-entries']||[];const t=e.reduce((s,ee)=>s+(parseFloat(ee.time)||0),0)||_v(d,'a-verify-h');return tw>0&&t>0?t/tw*100:null;};
+    const getVr=(docs,mk)=>{const d=docs.find(x=>x._month===mk);if(!d)return null;const tw=_v(d,'a-total-work');const entry=d['a-entry']||(d['a-entries']&&d['a-entries'][0])||null;const e=entry?[entry]:(d['a-entries']||[]);const t=e.reduce((s,ee)=>s+(parseFloat(ee.time)||0),0)||_v(d,'a-verify-h');return tw>0&&t>0?t/tw*100:null;};
     const allAiM=[...new Set([...naka.map(d=>d._month),...oishi.map(d=>d._month)])].sort((a,b)=>MKEYS.indexOf(a)-MKEYS.indexOf(b));
     const nakaVrs=allAiM.map(mk=>getVr(naka,mk)),oishiVrs=allAiM.map(mk=>getVr(oishi,mk));
     const nakaAvg=avg(nakaVrs.filter(v=>v!==null)),oishiAvg=avg(oishiVrs.filter(v=>v!==null));
-    const nakaTot=naka.reduce((s,d)=>{return s+(d['a-entries']||[]).reduce((ss,e)=>ss+(parseFloat(e.time)||0),0);},0);
+    const nakaTot=naka.reduce((s,d)=>{const entry=d['a-entry']||(d['a-entries']&&d['a-entries'][0])||null;const e=entry?[entry]:(d['a-entries']||[]);return s+e.reduce((ss,ee)=>ss+(parseFloat(ee.time)||0),0);},0);
     set('an-kpi-naka-vr',nakaAvg!==null?nakaAvg.toFixed(1)+'%':'—',nakaAvg===null?'':nakaAvg>15?'red':nakaAvg>=10?'yellow':'green');
     set('an-kpi-oishi-vr',oishiAvg!==null?oishiAvg.toFixed(1)+'%':'—',oishiAvg===null?'':oishiAvg>15?'red':oishiAvg>=10?'yellow':'green');
     set('an-kpi-naka-total',nakaTot?nakaTot+'h':'—','blue');
