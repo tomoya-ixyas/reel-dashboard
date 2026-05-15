@@ -8,14 +8,14 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 :root {
-  --bg:#0e0f11; --surface:#16181d; --surface2:#1e2028; --border:#2a2d38;
-  --accent:#5b8fff; --accent2:#3dffc8; --accent3:#ff6b6b; --accent4:#ffd166;
-  --text:#e8eaf0; --muted:#8c919e; --dim:#606678;
+  --bg:#fafafa; --surface:#ffffff; --surface2:#f0faf6; --border:#c9dee0; --border-interactive:#9BBFC2;
+  --accent:#008055; --accent2:#00a36c; --accent3:#e53935; --accent4:#e07800;
+  --text:#0f1419; --muted:#536471; --dim:#aac8cb;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;padding:32px 24px}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-weight:400;min-height:100vh;padding:32px 24px}
 
 /* ── ローディング ── */
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:16px}
@@ -26,41 +26,41 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-seri
 /* ── ログイン ── */
 #login-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:100}
 .login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:420px}
-.login-logo{font-family:'DM Mono',monospace;font-size:14px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.login-logo{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
 .login-box h2{font-size:22px;font-weight:500;margin-bottom:8px}
 .login-box p{font-size:15px;color:var(--muted);margin-bottom:28px;line-height:1.7}
 .member-grid{display:flex;flex-direction:column;gap:10px}
-.member-btn{display:flex;align-items:center;gap:16px;padding:18px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;width:100%}
-.member-btn:hover{border-color:var(--accent);background:rgba(91,143,255,.06)}
+.member-btn{display:flex;align-items:center;gap:16px;padding:18px;border:1px solid var(--border-interactive);border-radius:10px;background:var(--surface);cursor:pointer;text-align:left;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;transition:all .15s;width:100%}
+.member-btn:hover{border-color:var(--accent);background:rgba(0,128,85,.05)}
 .mb-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;flex-shrink:0}
-.av-roi{background:rgba(91,143,255,.15);color:var(--accent)}
-.av-ai{background:rgba(255,209,102,.15);color:var(--accent4)}
+.av-roi{background:rgba(0,128,85,.1);color:var(--accent)}
+.av-ai{background:rgba(224,120,0,.12);color:var(--accent4)}
 .mb-info{display:flex;flex-direction:column;gap:4px;flex:1}
 .mb-name{font-size:17px;font-weight:500;color:var(--text)}
 .mb-role{font-size:13px;color:var(--muted)}
-.mb-badge{font-size:14px;padding:4px 10px;border-radius:20px;font-weight:500;flex-shrink:0}
-.badge-roi{background:rgba(91,143,255,.15);color:var(--accent)}
-.badge-ai{background:rgba(255,209,102,.12);color:var(--accent4)}
+.mb-badge{font-size:14px;padding:4px 10px;border-radius:20px;font-weight:700;flex-shrink:0;font-family:'Noto Sans JP',sans-serif}
+.badge-roi{background:rgba(0,128,85,.1);color:var(--accent)}
+.badge-ai{background:rgba(224,120,0,.1);color:var(--accent4)}
 
 /* ── ヘッダー ── */
 header{max-width:1080px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px}
 .hdr-left p{font-size:14px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
-.hdr-left h1{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:-.02em}
+.hdr-left h1{font-family:'IBM Plex Mono',monospace;font-size:22px;letter-spacing:-.02em}
 .hdr-right{display:flex;gap:10px;align-items:center}
-.user-pill{font-size:14px;font-weight:400;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:7px 16px;display:flex;align-items:center;gap:8px}
+.user-pill{font-size:14px;font-weight:400;background:var(--surface2);border-radius:20px;padding:7px 16px;display:flex;align-items:center;gap:8px}
 .role-badge{font-size:14px;padding:3px 10px;border-radius:20px;font-weight:500}
-.btn-logout{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:7px 16px;cursor:pointer;transition:all .15s}
-.btn-logout:hover{border-color:var(--accent3);color:var(--accent3)}
+.btn-logout{background:var(--surface);border:1px solid var(--border-interactive);border-radius:100px;color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:13px;padding:7px 16px;cursor:pointer;transition:all .15s}
+.btn-logout:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── ビュータブ ── */
 .vtabs{max-width:1080px;margin:0 auto 1.5rem;display:flex;gap:2px;border-bottom:1px solid var(--border)}
-.vtab{font-size:15px;padding:12px 22px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.vtab{font-size:15px;padding:12px 22px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-weight:700;transition:all .15s}
 .vtab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
 /* ── 月タブ ── */
 .mtabs{max-width:1080px;margin:0 auto 1.5rem;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .mtabs::-webkit-scrollbar{display:none}
-.mtab{flex-shrink:0;font-family:'DM Mono',monospace;font-size:13px;padding:8px 18px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.mtab{flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 18px;border-radius:6px;border:1px solid var(--border-interactive);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s}
 .mtab:hover{border-color:var(--accent);color:var(--accent)}
 .mtab.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
 .mtab.has-data::after{content:'●';font-size:7px;margin-left:5px;vertical-align:3px}
@@ -74,32 +74,32 @@ main{max-width:1080px;margin:0 auto}
 .si{padding:1.5rem;border-right:1px solid var(--border)}
 .si:last-child{border-right:none}
 .si-label{font-size:14px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
-.si-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+.si-val{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600}
 .si-val.blue{color:var(--accent)} .si-val.green{color:var(--accent2)} .si-val.yellow{color:var(--accent4)} .si-val.red{color:var(--accent3)}
 
 /* ── セクション ── */
 .sec{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden}
 .sec-hdr{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sec-tag{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;padding:4px 10px;border-radius:4px;letter-spacing:.06em}
-.tag-a{background:rgba(91,143,255,.15);color:var(--accent)}
-.tag-b{background:rgba(61,255,200,.12);color:var(--accent2)}
-.tag-ai{background:rgba(255,209,102,.12);color:var(--accent4)}
-.sec-title{font-size:15px;font-weight:500}
+.sec-tag{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;padding:4px 10px;border-radius:4px;letter-spacing:.06em}
+.tag-a{background:rgba(0,128,85,.1);color:var(--accent)}
+.tag-b{background:rgba(0,163,108,.1);color:var(--accent2)}
+.tag-ai{background:rgba(224,120,0,.1);color:var(--accent4)}
+.sec-title{font-size:18px;font-weight:700}
 .sec-body{padding:24px}
 
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 .fld{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px}
-.fld.calc{border-color:rgba(91,143,255,.3);background:rgba(91,143,255,.04)}
-.fld.hl{border-color:rgba(61,255,200,.25);background:rgba(61,255,200,.04)}
-.fld-num{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.1em}
+.fld.calc{border-color:rgba(0,128,85,.25);background:rgba(0,128,85,.04)}
+.fld.hl{border-color:rgba(0,128,85,.2);background:rgba(0,128,85,.04)}
+.fld-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.1em}
 .fld-label{font-size:13px;color:var(--muted);line-height:1.5}
-.fld input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:10px 14px;width:100%;outline:none;transition:border-color .15s}
+.fld input{background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:16px;padding:10px 14px;width:100%;outline:none;transition:border-color .15s}
 .fld input:focus{border-color:var(--accent)}
 .fld input::placeholder{color:var(--dim)}
 .fld input.sub{font-size:14px;margin-top:4px}
 .unit{font-size:13px;color:var(--muted)}
-.computed{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;min-height:38px;display:flex;align-items:center;color:var(--accent)}
+.computed{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;min-height:38px;display:flex;align-items:center;color:var(--accent)}
 .computed.green{color:var(--accent2)} .computed.red{color:var(--accent3)} .computed.yellow{color:var(--accent4)}
 .computed .empty{font-size:15px;font-weight:300;color:var(--muted)}
 .bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:2px}
@@ -107,18 +107,18 @@ main{max-width:1080px;margin:0 auto}
 
 .memo-wrap{padding:0 24px 24px}
 .memo-label{font-size:14px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
-.memo-wrap textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:300;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px}
+.memo-wrap textarea{width:100%;background:var(--surface);border:1px solid var(--border-interactive);border-radius:8px;color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:15px;font-weight:400;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px}
 .memo-wrap textarea:focus{border-color:var(--accent2)}
 .memo-wrap textarea::placeholder{color:var(--dim)}
 
 .ai-table-wrap{padding:0 24px 24px;overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:14px}
-th{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
-td{padding:10px 12px;border-bottom:1px solid var(--dim)}
+th{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em;background:var(--surface2)}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
 tr:last-child td{border-bottom:none}
-td input,td select{background:transparent;border:none;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;width:100%;outline:none}
+td input,td select{background:transparent;border:none;color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:14px;width:100%;outline:none}
 td input::placeholder{color:var(--dim)}
-.add-row-btn{width:100%;margin-top:10px;border:1px dashed var(--border);border-radius:6px;background:transparent;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:14px;padding:10px;cursor:pointer;transition:all .15s}
+.add-row-btn{width:100%;margin-top:10px;border:1px dashed var(--border);border-radius:6px;background:transparent;color:var(--muted);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:14px;padding:10px;cursor:pointer;transition:all .15s}
 .add-row-btn:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── AI検証エントリー ── */
@@ -127,28 +127,43 @@ td input::placeholder{color:var(--dim)}
 .ae-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
 .ae-field{display:flex;flex-direction:column;gap:6px}
 .ae-label{font-size:14px;color:var(--muted);letter-spacing:.06em}
-.ae-field input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP',sans-serif}
+.ae-field input{background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif}
 .ae-field input::placeholder{color:var(--dim)}
-.ae-field textarea{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP',sans-serif;resize:vertical;min-height:64px;line-height:1.6}
+.ae-field textarea{background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-size:15px;padding:9px 12px;outline:none;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;resize:vertical;min-height:64px;line-height:1.6}
 .ae-field textarea::placeholder{color:var(--dim)}
 
 /* ── 保存バー ── */
 .save-bar{max-width:1080px;margin:.75rem auto 0;display:flex;justify-content:flex-end;align-items:center;gap:10px}
-.save-status{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);transition:color .3s}
+.save-status{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);transition:color .3s}
 .save-status.saved{color:var(--accent2)}
 .save-status.saving{color:var(--accent4)}
-.btn-save{background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;cursor:pointer;transition:opacity .15s}
+.btn-save{background:var(--accent);border:none;border-radius:100px;color:#fff;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;cursor:pointer;transition:opacity .15s}
 .btn-save:hover{opacity:.85}
-.btn-clear{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:14px;padding:12px 18px;cursor:pointer;transition:all .15s}
-.btn-clear:hover{border-color:var(--accent3);color:var(--accent3)}
+.btn-clear{background:transparent;border:none;color:var(--muted);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:13px;padding:8px 4px;cursor:pointer;transition:color .15s;text-decoration:underline;text-underline-offset:3px}
+.btn-clear:hover{color:var(--accent3)}
 
-/* ── 蓄積データ ── */
+/* ── リセット確認モーダル ── */
+.reset-overlay{position:fixed;inset:0;background:rgba(15,20,25,.45);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s}
+.reset-overlay.show{opacity:1;pointer-events:auto}
+.reset-modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:400px;display:flex;flex-direction:column;gap:16px}
+.reset-modal h3{font-size:17px;font-weight:700;text-align:center;color:var(--text)}
+.reset-modal p{font-size:14px;color:var(--muted);line-height:1.7;text-align:center}
+.reset-check-wrap{display:flex;align-items:flex-start;gap:10px;background:rgba(229,57,53,.06);border:1px solid rgba(229,57,53,.2);border-radius:8px;padding:12px 14px;cursor:pointer}
+.reset-check-wrap input[type=checkbox]{margin-top:2px;flex-shrink:0;accent-color:var(--accent3);width:16px;height:16px;cursor:pointer}
+.reset-check-wrap span{font-size:13px;color:var(--text);line-height:1.6}
+.reset-actions{display:flex;gap:8px}
+.btn-reset-cancel{flex:1;background:transparent;border:1px solid var(--border-interactive);border-radius:100px;color:var(--muted);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:14px;padding:11px;cursor:pointer;transition:all .15s}
+.btn-reset-cancel:hover{border-color:var(--accent);color:var(--accent)}
+.btn-reset-exec{flex:1;background:var(--accent3);border:none;border-radius:100px;color:#fff;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:14px;font-weight:700;padding:11px;cursor:default;opacity:.3;transition:opacity .15s}
+.btn-reset-exec.enabled{opacity:1;cursor:pointer}
+
+
 .accum-table-wrap{padding:24px;overflow-x:auto}
 .accum-table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}
-.accum-table th{font-family:'DM Mono',monospace;font-size:14px;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em}
-.accum-table td{padding:12px 16px;border-bottom:1px solid var(--dim);font-family:'DM Mono',monospace;font-size:14px}
+.accum-table th{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.06em;background:var(--surface2)}
+.accum-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:14px}
 .accum-table tr:last-child td{border-bottom:none}
-.accum-table tr:hover td{background:rgba(255,255,255,.02)}
+.accum-table tr:hover td{background:var(--surface2)}
 .col-month{color:var(--accent);font-weight:500}
 .col-pos{color:var(--accent2)} .col-neg{color:var(--accent3)} .col-warn{color:var(--accent4)}
 .no-data{padding:3rem;text-align:center;color:var(--muted);font-size:15px}
@@ -157,47 +172,47 @@ td input::placeholder{color:var(--dim)}
 .login-section-label{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
 .login-divider{height:1px;background:var(--border);margin:22px 0}
 .tool-grid{display:flex;flex-direction:column;gap:8px}
-.tool-btn{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .15s;width:100%}
-.tool-btn:hover{border-color:var(--accent);background:rgba(91,143,255,.06)}
+.tool-btn{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--border-interactive);border-radius:10px;background:var(--surface);cursor:pointer;text-align:left;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;transition:all .15s;width:100%}
+.tool-btn:hover{border-color:var(--accent);background:rgba(0,128,85,.05)}
 .tool-icon{font-size:22px;flex-shrink:0}
 .tool-info{display:flex;flex-direction:column;gap:3px;flex:1}
 .tool-name{font-size:15px;font-weight:500;color:var(--text)}
 .tool-desc{font-size:14px;color:var(--muted)}
-.tool-entry-btn{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:transparent;cursor:pointer;width:100%;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
-.tool-entry-btn:hover{border-color:var(--accent);background:rgba(91,143,255,.06)}
+.tool-entry-btn{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--border-interactive);border-radius:10px;background:var(--surface);cursor:pointer;width:100%;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;transition:all .15s}
+.tool-entry-btn:hover{border-color:var(--accent);background:rgba(0,128,85,.05)}
 .tool-entry-icon{font-size:22px}
 .tool-entry-label{font-size:16px;font-weight:500;color:var(--text);flex:1;text-align:left}
-.tool-entry-arrow{font-size:16px;color:var(--muted)}
+.tool-entry-arrow{font-size:16px;color:var(--accent)}
 
 /* ── Layermateカード ── */
 .lm-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .lm-card-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
 .lm-card-name{font-size:18px;font-weight:500;color:var(--text)}
 .lm-card-sub{font-size:14px;color:var(--muted)}
-.lm-card-grant{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent)}
+.lm-card-grant{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--accent)}
 .lm-card-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
 .lm-transfer-row{display:flex;align-items:center;gap:12px}
 .lm-row-label{font-size:13px;color:var(--muted);white-space:nowrap;min-width:80px}
-.lm-transfer-row input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;padding:9px 12px;outline:none}
+.lm-transfer-row input{flex:1;background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;padding:9px 12px;outline:none}
 .lm-transfer-row input:focus{border-color:var(--accent)}
 .lm-divider{height:1px;background:var(--border);margin:4px 0}
 .lm-type-row{display:flex;flex-direction:column;gap:8px}
 .lm-type-label{font-size:14px;font-weight:500;color:var(--text)}
 .lm-type-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .lm-input-label{font-size:13px;color:var(--muted);letter-spacing:.04em;margin-bottom:5px}
-.lm-type-inputs input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;padding:9px 12px;outline:none;width:100%}
+.lm-type-inputs input{background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;padding:9px 12px;outline:none;width:100%}
 .lm-type-inputs input:focus{border-color:var(--accent)}
-.lm-auto-val{font-family:'DM Mono',monospace;font-size:15px;color:var(--accent4);padding:9px 0}
+.lm-auto-val{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--accent4);padding:9px 0}
 .lm-result-row{display:flex;gap:20px;flex-wrap:wrap;padding-top:4px}
 .lm-result-label{font-size:14px;color:var(--muted);margin-right:6px}
-.lm-result-val{font-family:'DM Mono',monospace;font-size:14px;color:var(--text)}
-.lm-result-ratio{font-family:'DM Mono',monospace;font-size:20px;font-weight:700}
+.lm-result-val{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--text)}
+.lm-result-ratio{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700}
 .ai-summary-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;padding:0;display:flex;align-items:stretch;overflow:hidden}
 .ai-sb-item{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:8px;flex:1}
 .ai-sb-item-wide{flex:1.5}
 .ai-sb-divider{width:1px;background:var(--border);flex-shrink:0}
 .ai-sb-label{font-size:14px;color:var(--muted);letter-spacing:.06em}
-.ai-sb-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+.ai-sb-val{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500}
 .ai-sb-val.blue{color:var(--accent)}
 .ai-sb-val.yellow{color:var(--accent4)}
 .ai-sb-val.green{color:var(--accent2)}
@@ -206,14 +221,14 @@ td input::placeholder{color:var(--dim)}
 /* ── AI検証エントリーカード ── */
 .ai-entry{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent4);border-radius:10px;overflow:hidden}
 .ae-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
-.ae-entry-label{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--accent4);letter-spacing:.08em}
+.ae-entry-label{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--accent4);letter-spacing:.08em}
 .ae-time-row{display:flex;align-items:center;gap:12px}
 .ae-time-label{font-size:14px;color:var(--muted);white-space:nowrap}
-.ae-time{width:100px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:18px;font-weight:500;padding:10px 14px;outline:none}
+.ae-time{width:100px;background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;padding:10px 14px;outline:none}
 .ae-time:focus{border-color:var(--accent)}
 .ae-time-unit{font-size:14px;color:var(--muted)}
 .ae-field-label{font-size:14px;color:var(--muted);letter-spacing:.04em}
-.ae-body textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:300;line-height:1.7;padding:10px 14px;resize:vertical;outline:none;min-height:90px}
+.ae-body textarea{width:100%;background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:14px;font-weight:400;line-height:1.7;padding:10px 14px;resize:vertical;outline:none;min-height:90px}
 .ae-body textarea:focus{border-color:var(--accent2)}
 .ae-body textarea::placeholder{color:var(--dim)}
 .roi-group-label{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-left:2px}
@@ -221,13 +236,13 @@ td input::placeholder{color:var(--dim)}
 /* ── コスト内訳テーブル ── */
 .cost-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .ct-head{display:grid;grid-template-columns:160px 1fr 1fr 1fr;background:var(--surface2);padding:10px 16px;gap:12px}
-.ct-head div{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.06em}
+.ct-head div{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.06em}
 .ct-row{display:grid;grid-template-columns:160px 1fr 1fr 1fr;padding:14px 16px;gap:12px;border-top:1px solid var(--border);align-items:center}
-.ct-row:hover{background:rgba(255,255,255,.015)}
+.ct-row:hover{background:var(--surface2)}
 .ct-person{font-size:15px;font-weight:500;color:var(--text)}
 .ct-ref{font-size:14px;color:var(--muted);padding-top:4px}
 .ct-auto{display:flex;flex-direction:column}
-.ct-row input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;padding:8px 12px;width:100%;outline:none;transition:border-color .15s}
+.ct-row input{background:var(--surface);border:1px solid var(--border-interactive);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;padding:8px 12px;width:100%;outline:none;transition:border-color .15s}
 .ct-row input:focus{border-color:var(--accent)}
 .ct-row input::placeholder{color:var(--dim)}
 
@@ -241,27 +256,27 @@ td input::placeholder{color:var(--dim)}
 .kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
 .kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
 .kpi-label{font-size:13px;color:var(--muted);letter-spacing:.06em;margin-bottom:6px}
-.kpi-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500}
+.kpi-val{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600}
 .kpi-note{font-size:13px;color:var(--muted);margin-top:4px}
 
 /* ── Layermate蓄積カード ── */
 .lm-accum-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
 .lm-accum-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface)}
-.lm-accum-month{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;color:var(--text)}
-.lm-accum-grant{font-family:'DM Mono',monospace;font-size:14px;color:var(--muted)}
+.lm-accum-month{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:var(--text)}
+.lm-accum-grant{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--muted)}
 .lm-accum-body{display:grid;grid-template-columns:1fr 1fr}
 .lm-accum-person{padding:14px 18px}
 .lm-accum-person+.lm-accum-person{border-left:1px solid var(--border)}
 .lm-accum-pname{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.lm-accum-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.lm-accum-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)}
 .lm-accum-row:last-child{border-bottom:none}
 .lm-accum-rlabel{font-size:13px;color:var(--muted)}
-.lm-accum-rval{font-family:'DM Mono',monospace;font-size:15px;font-weight:500}
+.lm-accum-rval{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500}
 .lm-accum-rval.col-pos{color:var(--accent2)}
 .lm-accum-rval.col-warn{color:var(--accent4)}
-.lm-accum-rval.col-neg{color:#ff6b6b}
+.lm-accum-rval.col-neg{color:var(--accent3)}
 .lm-accum-transfer{font-size:12px;color:var(--muted);margin-left:4px}
-.lm-accum-memo{padding:10px 18px;border-top:1px solid var(--border);font-size:14px;color:var(--muted);line-height:1.7;background:rgba(255,255,255,.01)}
+.lm-accum-memo{padding:10px 18px;border-top:1px solid var(--border);font-size:14px;color:var(--muted);line-height:1.7;background:var(--surface2)}
 .lm-accum-memo-label{font-size:12px;color:var(--muted);margin-bottom:4px;letter-spacing:.06em}
 </style>
 </head>
@@ -275,9 +290,9 @@ td input::placeholder{color:var(--dim)}
 
 <!-- ログイン -->
 <div id="login-screen" style="display:none">
-  <div class="login-box" style="max-width:480px">
-    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px">IXYAS クリエイティブ室</div>
-    <h2 style="font-size:18px;font-weight:500;margin-bottom:24px">AI検証モニタリング</h2>
+  <div class="login-box" style="max-width:560px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px">IXYAS クリエイティブ室</div>
+    <h2 style="font-size:26px;font-weight:700;margin-bottom:24px">AI検証モニタリング</h2>
 
     <div class="login-section-label">メンバーとして入る</div>
     <div class="member-grid">
@@ -458,7 +473,6 @@ td input::placeholder{color:var(--dim)}
           <div id="ai-entries" style="display:flex;flex-direction:column;gap:16px"></div>
         </div>
         <div style="padding:0 20px 20px">
-          <button class="add-row-btn" onclick="addAiEntry({})">＋ 検証を追加</button>
         </div>
       </div>
     </div>
@@ -490,7 +504,7 @@ td input::placeholder{color:var(--dim)}
       <div class="accum-table-wrap"><div id="accum-ai-oishi"></div></div>
     </div>
     <div class="sec">
-      <div class="sec-hdr"><span class="sec-tag tag-a">Layermate</span><span class="sec-title">クレジットモニタリング</span></div>
+      <div class="sec-hdr"><span class="sec-tag tag-ai">Layermate</span><span class="sec-title">クレジットモニタリング</span></div>
       <div class="accum-table-wrap"><div id="accum-lm"></div></div>
     </div>
   </div>
@@ -533,7 +547,7 @@ td input::placeholder{color:var(--dim)}
     </div>
     <!-- Layermate分析 -->
     <div class="sec">
-      <div class="sec-hdr"><span class="sec-tag tag-a">Layermate</span><span class="sec-title">クレジット消費分析</span></div>
+      <div class="sec-hdr"><span class="sec-tag tag-ai">Layermate</span><span class="sec-title">クレジット消費分析</span></div>
       <div class="sec-body">
         <div class="kpi-strip" style="grid-template-columns:repeat(3,1fr)">
           <div class="kpi-card"><div class="kpi-label">森崎 平均消費率</div><div class="kpi-val yellow" id="an-kpi-m-ratio">—</div><div class="kpi-note">全記録月平均</div></div>
@@ -553,9 +567,9 @@ td input::placeholder{color:var(--dim)}
 <div id="tool-hub" style="display:none">
   <div style="max-width:480px;margin:0 auto;padding:60px 24px 0">
     <div style="margin-bottom:2rem">
-      <button onclick="backToLogin()" style="background:transparent;border:none;color:var(--muted);font-family:'Noto Sans JP',sans-serif;font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px">← ログイン画面に戻る</button>
+      <button onclick="backToLogin()" style="background:transparent;border:none;color:var(--muted);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px">← ログイン画面に戻る</button>
     </div>
-    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">IXYAS クリエイティブ室</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">IXYAS クリエイティブ室</div>
     <h2 style="font-size:20px;font-weight:500;margin-bottom:6px">UIツールモニタリング</h2>
     <p style="font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6">検証・運用中のUIツールを選択してください<br><span style="font-size:11px;color:var(--muted)">主に中村・大石が記録を担当します</span></p>
     <div style="display:flex;flex-direction:column;gap:10px" id="tool-hub-list">
@@ -578,7 +592,7 @@ td input::placeholder{color:var(--dim)}
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:1.5rem">
       <div>
         <p style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Reel Production</p>
-        <h1 id="tool-screen-title" style="font-family:'DM Mono',monospace;font-size:20px">ツールモニタリング</h1>
+        <h1 id="tool-screen-title" style="font-family:'IBM Plex Mono',monospace;font-size:20px">ツールモニタリング</h1>
       </div>
       <button class="btn-logout" onclick="backToToolHub()">← ツール一覧に戻る</button>
     </div>
@@ -590,7 +604,7 @@ td input::placeholder{color:var(--dim)}
     <div id="tool-layermate">
       <div class="sec">
         <div class="sec-hdr">
-          <span class="sec-tag tag-a">Layermate</span>
+          <span class="sec-tag tag-ai">Layermate</span>
           <span class="sec-title">クレジットモニタリング</span>
         </div>
         <div class="sec-body">
@@ -702,7 +716,7 @@ td input::placeholder{color:var(--dim)}
               <div class="lm-card-body">
                 <div class="lm-transfer-row">
                   <span class="lm-row-label">移管（cr）</span>
-                  <input type="number" id="lm-s-transfer" placeholder="自動計算" readonly style="color:var(--accent4);background:rgba(255,209,102,.06);cursor:default">
+                  <input type="number" id="lm-s-transfer" placeholder="自動計算" readonly style="color:var(--accent4);background:rgba(224,120,0,.06);cursor:default">
                   <span style="font-size:11px;color:var(--muted)">森崎と連動</span>
                 </div>
                 <div class="lm-divider"></div>
@@ -739,7 +753,7 @@ td input::placeholder{color:var(--dim)}
           </div>
 
           <div class="roi-group-label">傾向・所感</div>
-          <textarea id="lm-memo" placeholder="今月の傾向や気づきを記入" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:300;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px;margin-top:10px"></textarea>
+          <textarea id="lm-memo" placeholder="今月の傾向や気づきを記入" style="width:100%;background:var(--surface2);border:1px solid var(--border-interactive);border-radius:8px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:15px;font-weight:300;line-height:1.7;padding:14px 16px;resize:vertical;outline:none;min-height:90px;margin-top:10px"></textarea>
         </div>
       </div>
       <div class="save-bar" style="max-width:none;margin:0.75rem 0 0">
@@ -788,7 +802,7 @@ function doLogin(name, role) {
   badge.textContent=role==='roi'?'動画 ROI担当':'UI AI検証担当';
   badge.className='role-badge '+(role==='roi'?'badge-roi':'badge-ai');
   const av=document.getElementById('hdr-av');
-  av.style.background=role==='roi'?'rgba(91,143,255,.2)':'rgba(255,209,102,.2)';
+  av.style.background=role==='roi'?'rgba(0,128,85,.15)':'rgba(224,120,0,.15)';
   av.style.color=role==='roi'?'var(--accent)':'var(--accent4)';
   av.textContent=name[0];
   document.getElementById('roi-ui').style.display=role==='roi'?'':'none';
@@ -819,7 +833,7 @@ async function loadFields(){
     } else {
       ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=d[id]||'';});
       const wrap=document.getElementById('ai-entries');wrap.innerHTML='';
-      const entries=d['a-entries']||[{}];entries.forEach(addAiEntry);if(!entries.length)addAiEntry({});
+      const entry=(d['a-entries']&&d['a-entries'][0])||d['a-entry']||{};addAiEntry(entry);
       bindAi();
     }
     setSaveStatus('未保存','');
@@ -841,11 +855,8 @@ async function doSave(){
     d['r-ai-log']=rows;
   } else {
     ['a-total-work'].forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
-    const entries=[];
-    document.querySelectorAll('.ai-entry').forEach(card=>{
-      entries.push({content:card.querySelector('.ae-content')?.value||'',time:card.querySelector('.ae-time')?.value||''});
-    });
-    d['a-entries']=entries;
+    const card=document.querySelector('.ai-entry');
+    d['a-entry']={content:card?.querySelector('.ae-content')?.value||'',time:card?.querySelector('.ae-time')?.value||''};
   }
   d['_user']=currentUser; d['_role']=currentRole; d['_month']=MKEYS[curMonth];
   try{
@@ -856,12 +867,31 @@ async function doSave(){
   }catch(e){setSaveStatus('保存エラー','');}
 }
 
+let _resetCb=null;
+function openResetModal(title,desc,cb){
+  _resetCb=cb;
+  document.getElementById('reset-modal-title').textContent=title;
+  document.getElementById('reset-modal-desc').innerHTML=desc;
+  document.getElementById('reset-check').checked=false;
+  document.getElementById('btn-reset-exec').classList.remove('enabled');
+  document.getElementById('reset-overlay').classList.add('show');
+}
+function closeResetModal(){
+  document.getElementById('reset-overlay').classList.remove('show');
+  _resetCb=null;
+}
+function onResetCheck(){
+  document.getElementById('btn-reset-exec').classList.toggle('enabled',document.getElementById('reset-check').checked);
+}
+function execReset(){if(_resetCb){_resetCb();closeResetModal();}}
+
 async function clearMonth(){
-  if(!confirm('この月のデータをリセットしますか？'))return;
-  try{
-    await db.collection('dashboard').doc(docKey()).delete();
-    loadFields(); renderTabs();
-  }catch(e){}
+  const m=MONTHS[curMonth]||MKEYS[curMonth];
+  openResetModal(
+    `${m}のデータをリセット`,
+    `<strong>${m}</strong> の入力データがすべて削除されます。<br>この操作は元に戻せません。`,
+    async()=>{try{await db.collection('dashboard').doc(docKey()).delete();loadFields();renderTabs();}catch(e){}}
+  );
 }
 
 function setSaveStatus(txt,cls){
@@ -932,9 +962,8 @@ function computeRoi(){
 }
 function computeAi(){
   const tw=nv('a-total-work');
-  const cards=document.querySelectorAll('.ai-entry');
-  let totalTime=0;
-  cards.forEach(c=>{totalTime+=parseFloat(c.querySelector('.ae-time')?.value)||0;});
+  const card=document.querySelector('.ai-entry');
+  const totalTime=parseFloat(card?.querySelector('.ae-time')?.value)||0;
   const vr=tw>0&&totalTime>0?totalTime/tw*100:null;
   const ct=document.getElementById('a-c-total');
   if(ct){ct.className='computed yellow';ct.textContent=totalTime?totalTime+'h':'—';}
@@ -972,12 +1001,11 @@ function addRoiRow(r){
 
 function addAiEntry(r){
   const wrap=document.getElementById('ai-entries');
-  const idx=wrap.children.length+1;
+  wrap.innerHTML='';
   const div=document.createElement('div');
   div.className='ai-entry';
   div.innerHTML=`
     <div class="ae-body">
-      <div class="ae-entry-label">検証 #${idx}</div>
       <div class="ae-time-row">
         <span class="ae-time-label">検証時間</span>
         <input class="ae-time" type="number" placeholder="0" min="0" step="0.5" value="${r.time||''}">
@@ -1129,8 +1157,12 @@ async function doSaveLm(){
 }
 
 async function clearLmMonth(){
-  if(!confirm('この月のLayermateデータをリセットしますか？'))return;
-  try{await db.collection('layermate').doc(lmDocKey()).delete();loadLmFields();renderLmTabs();}catch(e){}
+  const m=MONTHS[lmMonth]||MKEYS[lmMonth];
+  openResetModal(
+    `${m}のLayermateデータをリセット`,
+    `<strong>${m}</strong> のLayermateデータがすべて削除されます。<br>この操作は元に戻せません。`,
+    async()=>{try{await db.collection('layermate').doc(lmDocKey()).delete();loadLmFields();renderLmTabs();}catch(e){}}
+  );
 }
 
 
@@ -1250,11 +1282,11 @@ async function renderAccum(group){
           const vr=tw>0&&totalVerify>0?totalVerify/tw*100:null;
           const combined=entries.map((e,i)=>{
             const text=e.content||(([e.tool,e.prompt,e.note].filter(Boolean).join(' / '))||'');
-            return text?`<span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
+            return text?`<span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px">#${i+1} ${e.time?e.time+'h':''}</span> ${text}`:'';
           }).filter(Boolean).join('<br><br>');
           return`<tr>
             <td class="col-month" style="vertical-align:top;padding-top:14px;white-space:nowrap">${monthLabel(d._month)}</td>
-            <td style="vertical-align:top;padding-top:14px;font-family:'DM Mono',monospace">${totalVerify?totalVerify+'h':'—'}</td>
+            <td style="vertical-align:top;padding-top:14px;font-family:'IBM Plex Mono',monospace">${totalVerify?totalVerify+'h':'—'}</td>
             <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-pos':vr>=10?'col-warn':'')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
             <td style="white-space:normal;line-height:1.8;padding:12px 16px">${combined||'—'}</td>
           </tr>`;
@@ -1336,7 +1368,7 @@ async function renderAccum(group){
 // ── 分析ビュー ──
 let _charts={};
 function _mkChart(id,cfg){if(_charts[id]){_charts[id].destroy();}const el=document.getElementById(id);if(!el)return;_charts[id]=new Chart(el,cfg);}
-function _cDef(){Chart.defaults.color='#6b7080';Chart.defaults.borderColor='#2a2d38';Chart.defaults.font.family="'DM Mono',monospace";Chart.defaults.font.size=11;}
+function _cDef(){Chart.defaults.color='#536471';Chart.defaults.borderColor='#c9dee0';Chart.defaults.font.family="'IBM Plex Mono',monospace";Chart.defaults.font.size=11;}
 function _v(d,k){return parseFloat(d[k])||0;}
 
 async function renderAnalytics(group){
@@ -1345,7 +1377,7 @@ async function renderAnalytics(group){
   const now=new Date();
   const fy=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1;
   const ml=(mk)=>{const i=MKEYS.indexOf(mk);const y=parseInt(mk)>=4?fy:fy+1;return`${y%100}/${MONTHS[i]||mk}`;};
-  const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#2a2d38'}},x:{grid:{color:'rgba(42,45,56,.4)'}}}};
+  const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#c9dee0'}},x:{grid:{color:'rgba(201,222,224,.6)'}}}};
   const set=(id,v,cls)=>{const e=document.getElementById(id);if(!e)return;e.textContent=v;if(cls)e.className='kpi-val '+cls;};
   const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
   const noData=id=>{const el=document.getElementById(id);if(el){const w=el.closest('.chart-wrap');if(w)w.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:13px">データなし</div>';}};
@@ -1380,10 +1412,10 @@ async function renderAnalytics(group){
       set('an-kpi-pvh',vpvh.length?avg(vpvh).toFixed(1)+'h':'—','blue');
       const vrA=avg(vvr);const vrKpi=document.getElementById('an-kpi-vr');
       if(vrKpi&&vrA!==null){vrKpi.textContent=vrA.toFixed(1)+'%';vrKpi.className='kpi-val '+(vrA>15?'red':vrA>=10?'yellow':'green');}
-      _mkChart('chart-gross',{type:'bar',data:{labels,datasets:[{data:grossArr.map(v=>v??0),backgroundColor:grossArr.map(v=>v===null?'#2a2d38':v>=0?'rgba(61,255,200,.5)':'rgba(255,107,107,.5)'),borderColor:grossArr.map(v=>v===null?'transparent':v>=0?'#3dffc8':'#ff6b6b'),borderWidth:1,borderRadius:4}]},options:{...co,plugins:{...co.plugins,tooltip:{callbacks:{label:ctx=>'¥'+Math.round(ctx.raw).toLocaleString()}}},scales:{y:{...co.scales.y,ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
-      _mkChart('chart-vr',{type:'line',data:{labels,datasets:[{data:vrArr,borderColor:'#3dffc8',backgroundColor:'rgba(61,255,200,.08)',tension:.3,spanGaps:true,pointRadius:4,fill:true}]},options:{...co,scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}}}}});
-      _mkChart('chart-pvh',{type:'bar',data:{labels,datasets:[{data:pvhArr.map(v=>v??0),backgroundColor:'rgba(91,143,255,.5)',borderColor:'#5b8fff',borderWidth:1,borderRadius:4}]},options:{...co,scales:{y:{...co.scales.y,ticks:{callback:v=>v+'h'}}}}});
-      _mkChart('chart-cost',{type:'bar',data:{labels,datasets:[{label:'人件費',data:laborArr,backgroundColor:'rgba(91,143,255,.55)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'Firefly',data:ffArr,backgroundColor:'rgba(255,209,102,.55)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{stacked:true,grid:{color:'rgba(42,45,56,.4)'}},y:{stacked:true,grid:{color:'#2a2d38'},ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
+      _mkChart('chart-gross',{type:'bar',data:{labels,datasets:[{data:grossArr.map(v=>v??0),backgroundColor:grossArr.map(v=>v===null?'#c9dee0':v>=0?'rgba(0,163,108,.5)':'rgba(229,57,53,.5)'),borderColor:grossArr.map(v=>v===null?'transparent':v>=0?'#00a36c':'#e53935'),borderWidth:1,borderRadius:4}]},options:{...co,plugins:{...co.plugins,tooltip:{callbacks:{label:ctx=>'¥'+Math.round(ctx.raw).toLocaleString()}}},scales:{y:{...co.scales.y,ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
+      _mkChart('chart-vr',{type:'line',data:{labels,datasets:[{data:vrArr,borderColor:'#00a36c',backgroundColor:'rgba(0,163,108,.08)',tension:.3,spanGaps:true,pointRadius:4,fill:true}]},options:{...co,scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}}}}});
+      _mkChart('chart-pvh',{type:'bar',data:{labels,datasets:[{data:pvhArr.map(v=>v??0),backgroundColor:'rgba(0,128,85,.5)',borderColor:'#008055',borderWidth:1,borderRadius:4}]},options:{...co,scales:{y:{...co.scales.y,ticks:{callback:v=>v+'h'}}}}});
+      _mkChart('chart-cost',{type:'bar',data:{labels,datasets:[{label:'人件費',data:laborArr,backgroundColor:'rgba(0,128,85,.55)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'Firefly',data:ffArr,backgroundColor:'rgba(224,120,0,.55)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{stacked:true,grid:{color:'rgba(201,222,224,.6)'}},y:{stacked:true,grid:{color:'#c9dee0'},ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
     } else { ['chart-gross','chart-vr','chart-pvh','chart-cost'].forEach(noData); }
 
     const getVr=(docs,mk)=>{const d=docs.find(x=>x._month===mk);if(!d)return null;const tw=_v(d,'a-total-work');const e=d['a-entries']||[];const t=e.reduce((s,ee)=>s+(parseFloat(ee.time)||0),0)||_v(d,'a-verify-h');return tw>0&&t>0?t/tw*100:null;};
@@ -1394,7 +1426,7 @@ async function renderAnalytics(group){
     set('an-kpi-naka-vr',nakaAvg!==null?nakaAvg.toFixed(1)+'%':'—',nakaAvg===null?'':nakaAvg>15?'red':nakaAvg>=10?'yellow':'green');
     set('an-kpi-oishi-vr',oishiAvg!==null?oishiAvg.toFixed(1)+'%':'—',oishiAvg===null?'':oishiAvg>15?'red':oishiAvg>=10?'yellow':'green');
     set('an-kpi-naka-total',nakaTot?nakaTot+'h':'—','blue');
-    if(allAiM.length){_mkChart('chart-ai-vr',{type:'line',data:{labels:allAiM.map(mk=>ml(mk)),datasets:[{label:'中村',data:nakaVrs,borderColor:'#ffd166',backgroundColor:'rgba(255,209,102,.08)',tension:.3,spanGaps:true,pointRadius:4},{label:'大石',data:oishiVrs,borderColor:'#5b8fff',backgroundColor:'rgba(91,143,255,.08)',tension:.3,spanGaps:true,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{y:{min:0,grid:{color:'#2a2d38'},ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}},x:{grid:{color:'rgba(42,45,56,.4)'}}}}}); } else { noData('chart-ai-vr'); }
+    if(allAiM.length){_mkChart('chart-ai-vr',{type:'line',data:{labels:allAiM.map(mk=>ml(mk)),datasets:[{label:'中村',data:nakaVrs,borderColor:'#e07800',backgroundColor:'rgba(224,120,0,.08)',tension:.3,spanGaps:true,pointRadius:4},{label:'大石',data:oishiVrs,borderColor:'#008055',backgroundColor:'rgba(0,128,85,.08)',tension:.3,spanGaps:true,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{y:{min:0,grid:{color:'#c9dee0'},ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}},x:{grid:{color:'rgba(201,222,224,.6)'}}}}}); } else { noData('chart-ai-vr'); }
   }catch(e){console.error('dashboard分析エラー:',e);}
 
   // Layermate
@@ -1415,13 +1447,30 @@ async function renderAnalytics(group){
       set('an-kpi-m-ratio',mA!==null?mA.toFixed(1)+'%':'—','yellow');
       set('an-kpi-s-ratio',sA!==null?sA.toFixed(1)+'%':'—','yellow');
       set('an-kpi-lm-peak',isFinite(peak)?peak.toFixed(1)+'%':'—',peak>90?'red':peak>70?'yellow':'green');
-      const co2={responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{y:{grid:{color:'#2a2d38'}},x:{grid:{color:'rgba(42,45,56,.4)'}}}};
-      _mkChart('chart-lm-ratio',{type:'line',data:{labels,datasets:[{label:'森崎',data:mR,borderColor:'#ffd166',backgroundColor:'rgba(255,209,102,.08)',tension:.3,spanGaps:true,pointRadius:4},{label:'佐藤',data:sR,borderColor:'#3dffc8',backgroundColor:'rgba(61,255,200,.08)',tension:.3,spanGaps:true,pointRadius:4}]},options:{...co2,scales:{y:{...co2.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,100);}}}}});
-      _mkChart('chart-lm-cr',{type:'bar',data:{labels,datasets:[{label:'ヘビー',data:crH,backgroundColor:'rgba(255,107,107,.6)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'スタンダード',data:crS,backgroundColor:'rgba(91,143,255,.6)',borderWidth:0},{label:'ライト',data:crL,backgroundColor:'rgba(61,255,200,.6)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co2,scales:{x:{...co2.scales.x,stacked:true},y:{...co2.scales.y,stacked:true,ticks:{callback:v=>v+'cr'}}}}});
+      const co2={responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{y:{grid:{color:'#c9dee0'}},x:{grid:{color:'rgba(201,222,224,.6)'}}}};
+      _mkChart('chart-lm-ratio',{type:'line',data:{labels,datasets:[{label:'森崎',data:mR,borderColor:'#e07800',backgroundColor:'rgba(224,120,0,.08)',tension:.3,spanGaps:true,pointRadius:4},{label:'佐藤',data:sR,borderColor:'#00a36c',backgroundColor:'rgba(0,163,108,.08)',tension:.3,spanGaps:true,pointRadius:4}]},options:{...co2,scales:{y:{...co2.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,100);}}}}});
+      _mkChart('chart-lm-cr',{type:'bar',data:{labels,datasets:[{label:'ヘビー',data:crH,backgroundColor:'rgba(229,57,53,.6)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'スタンダード',data:crS,backgroundColor:'rgba(0,128,85,.6)',borderWidth:0},{label:'ライト',data:crL,backgroundColor:'rgba(0,163,108,.6)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co2,scales:{x:{...co2.scales.x,stacked:true},y:{...co2.scales.y,stacked:true,ticks:{callback:v=>v+'cr'}}}}});
     }
   }catch(e){console.error('Layermate分析エラー:',e);}
 }
 
 </script>
+<!-- リセット確認モーダル -->
+<div class="reset-overlay" id="reset-overlay">
+  <div class="reset-modal">
+    <h3 id="reset-modal-title">この月のデータをリセット</h3>
+    <p id="reset-modal-desc">入力済みのデータがすべて削除されます。<br>この操作は元に戻せません。</p>
+    <label class="reset-check-wrap">
+      <input type="checkbox" id="reset-check" onchange="onResetCheck()">
+      <span>データが完全に削除されることを理解しました</span>
+    </label>
+    <div class="reset-actions">
+      <button class="btn-reset-cancel" onclick="closeResetModal()">キャンセル</button>
+      <button class="btn-reset-exec" id="btn-reset-exec" onclick="execReset()">削除する</button>
+    </div>
+  </div>
+</div>
+
 </body>
+
 </html>
