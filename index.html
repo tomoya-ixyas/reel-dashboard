@@ -15,7 +15,8 @@
   --text:#0f1419; --muted:#536471; --dim:#aac8cb;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-weight:400;min-height:100vh;padding:32px 24px}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-weight:400}
 
 /* ── ローディング ── */
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:16px}
@@ -43,31 +44,49 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP','YuGothic
 .badge-ai{background:rgba(224,120,0,.1);color:var(--accent4)}
 
 /* ── ヘッダー ── */
-header{max-width:1080px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px}
-.hdr-left p{font-size:14px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
-.hdr-left h1{font-family:'IBM Plex Mono',monospace;font-size:22px;letter-spacing:-.02em}
+/* ── アプリレイアウト ── */
+#main-screen{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.app-header{background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.app-header-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:relative}
+.hdr-brand{display:flex;align-items:center;gap:10px}
+.hdr-org{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.hdr-divider{width:1px;height:14px;background:var(--border-interactive)}
+.hdr-product{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--accent)}
 .hdr-right{display:flex;gap:10px;align-items:center}
+.hdr-center{display:flex;align-items:center;gap:8px;position:absolute;left:50%;transform:translateX(-50%)}
+.hdr-bc-user{font-size:13px;font-weight:700;color:var(--text)}
+.hdr-bc-sep{font-size:11px;color:var(--dim)}
+.hdr-bc-view{font-size:13px;color:var(--muted)}
+.hdr-bc-link{background:none;border:none;cursor:pointer;font-size:13px;font-weight:700;color:var(--accent);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;padding:0}
+.hdr-bc-link:hover{text-decoration:underline}
+.vtabs-bar{background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.vtabs-bar-inner{max-width:1280px;margin:0 auto;padding:0 24px}
+.content-wrapper{flex:1;overflow-y:auto;overflow-x:hidden;min-height:0}
+.main-content{max-width:1280px;margin:0 auto;padding:24px;width:100%}
+.app-footer{background:var(--surface);border-top:1px solid var(--border);flex-shrink:0}
+.app-footer-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:44px;display:flex;align-items:center;justify-content:space-between}
+.footer-brand{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em}
+.footer-note{font-size:11px;color:var(--dim)}
+
 .user-pill{font-size:14px;font-weight:400;background:var(--surface2);border-radius:20px;padding:7px 16px;display:flex;align-items:center;gap:8px}
 .role-badge{font-size:14px;padding:3px 10px;border-radius:20px;font-weight:500}
 .btn-logout{background:var(--surface);border:1px solid var(--border-interactive);border-radius:100px;color:var(--text);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:13px;padding:7px 16px;cursor:pointer;transition:all .15s}
 .btn-logout:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── ビュータブ ── */
-.vtabs{max-width:1080px;margin:0 auto 1.5rem;display:flex;gap:2px;border-bottom:1px solid var(--border)}
+.vtabs{display:flex;gap:2px}
 .vtab{font-size:15px;padding:12px 22px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-weight:700;transition:all .15s}
 .vtab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
 /* ── 月タブ ── */
-.mtabs{max-width:1080px;margin:0 auto 1.5rem;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.mtabs{margin-bottom:1.5rem;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .mtabs::-webkit-scrollbar{display:none}
 .mtab{flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 18px;border-radius:6px;border:1px solid var(--border-interactive);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s}
 .mtab:hover{border-color:var(--accent);color:var(--accent)}
 .mtab.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
 .mtab.has-data::after{content:'●';font-size:7px;margin-left:5px;vertical-align:3px}
 
-main{max-width:1080px;margin:0 auto}
-
-/* ── サマリー帯 ── */
+/* .main 削除済み（.main-content に統合） */
 .summary{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden;display:grid}
 .summary.cols5{grid-template-columns:repeat(5,1fr)}
 .summary.cols3{grid-template-columns:repeat(3,1fr)}
@@ -133,7 +152,7 @@ td input::placeholder{color:var(--dim)}
 .ae-field textarea::placeholder{color:var(--dim)}
 
 /* ── 保存バー ── */
-.save-bar{max-width:1080px;margin:.75rem auto 0;display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.save-bar{margin:.75rem 0 0;display:flex;justify-content:flex-end;align-items:center;gap:10px}
 .save-status{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);transition:color .3s}
 .save-status.saved{color:var(--accent2)}
 .save-status.saving{color:var(--accent4)}
@@ -335,26 +354,36 @@ td input::placeholder{color:var(--dim)}
 
 <!-- メイン -->
 <div id="main-screen" style="display:none">
-  <header>
-    <div class="hdr-left">
-      <p>Reel Production</p>
-      <h1>月次 ROI ダッシュボード</h1>
-    </div>
-    <div class="hdr-right">
-      <div class="user-pill">
-        <div id="hdr-av" style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600"></div>
-        <span id="disp-user">—</span>
-        <span class="role-badge" id="role-badge">—</span>
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="hdr-brand">
+        <span class="hdr-org">IXYAS クリエイティブ室</span>
+        <div class="hdr-divider"></div>
+        <span class="hdr-product">AI検証モニタリング</span>
       </div>
-      <button class="btn-logout" onclick="doLogout()">ログアウト</button>
+      <div class="hdr-right">
+        <div class="user-pill">
+          <div id="hdr-av" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;flex-shrink:0"></div>
+          <span id="disp-user">—</span>
+          <span class="role-badge" id="role-badge">—</span>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">ログアウト</button>
+      </div>
     </div>
   </header>
 
-  <div class="vtabs">
-    <button class="vtab active" id="vtab-input" onclick="switchView('input')">自分の入力</button>
-    <button class="vtab" id="vtab-accum" onclick="switchView('accum')">蓄積データ</button>
-    <button class="vtab" id="vtab-analytics" onclick="switchView('analytics')">分析</button>
+  <div class="vtabs-bar">
+    <div class="vtabs-bar-inner">
+      <div class="vtabs">
+        <button class="vtab active" id="vtab-input" onclick="switchView('input')">自分の入力</button>
+        <button class="vtab" id="vtab-accum" onclick="switchView('accum')">蓄積データ</button>
+        <button class="vtab" id="vtab-analytics" onclick="switchView('analytics')">分析</button>
+      </div>
+    </div>
   </div>
+
+  <div class="content-wrapper" id="content-wrapper">
+  <div class="main-content">
 
   <div id="input-view">
     <div class="mtabs" id="month-nav"></div>
@@ -561,47 +590,81 @@ td input::placeholder{color:var(--dim)}
       </div>
     </div>
   </div>
-</div>
+  </div><!-- /main-content -->
 
-<!-- ツール一覧ページ -->
-<div id="tool-hub" style="display:none">
-  <div style="max-width:480px;margin:0 auto;padding:60px 24px 0">
-    <div style="margin-bottom:2rem">
-      <button onclick="backToLogin()" style="background:transparent;border:none;color:var(--muted);font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:13px;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px">← ログイン画面に戻る</button>
+  </div><!-- /content-wrapper -->
+  <footer class="app-footer">
+    <div class="app-footer-inner">
+      <span class="footer-brand">IXYAS クリエイティブ室 — AI検証モニタリング</span>
+      <span class="footer-note">社内利用限定</span>
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">IXYAS クリエイティブ室</div>
-    <h2 style="font-size:20px;font-weight:500;margin-bottom:6px">UIツールモニタリング</h2>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6">検証・運用中のUIツールを選択してください<br><span style="font-size:11px;color:var(--muted)">主に中村・大石が記録を担当します</span></p>
-    <div style="display:flex;flex-direction:column;gap:10px" id="tool-hub-list">
-      <button class="tool-btn" onclick="openTool('layermate')">
-        <div class="tool-icon">🔧</div>
-        <div class="tool-info">
-          <span class="tool-name">Layermate</span>
-          <span class="tool-desc">クレジットモニタリング</span>
+  </footer>
+</div><!-- /main-screen -->
+
+<!-- UIツールモニタリング -->
+<div id="tool-hub" style="display:none;height:100vh;flex-direction:column;overflow:hidden">
+    <header class="app-header">
+      <div class="app-header-inner">
+        <div class="hdr-brand">
+          <span class="hdr-org">IXYAS クリエイティブ室</span>
+          <div class="hdr-divider"></div>
+          <span class="hdr-product">AI検証モニタリング</span>
         </div>
-        <span class="tool-arrow">→</span>
-      </button>
-      <!-- ツールが増えた場合はここに tool-btn を追加 -->
+        <div class="hdr-right"><button class="btn-logout" onclick="backToLogin()">← ログイン画面に戻る</button></div>
+      </div>
+    </header>
+    <div class="vtabs-bar">
+      <div class="vtabs-bar-inner" style="padding:0 24px;height:38px;display:flex;align-items:center">
+        <span style="font-size:14px;font-weight:700;color:var(--text)">UIツールモニタリング</span>
+      </div>
     </div>
-  </div>
+    <div class="content-wrapper">
+      <div class="main-content">
+        <div style="max-width:480px">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">検証・運用中のUIツールを選択してください<br><span style="font-size:11px">主に中村・大石が記録を担当します</span></p>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button class="tool-btn" onclick="openTool('layermate')">
+              <div class="tool-icon">🔧</div>
+              <div class="tool-info"><span class="tool-name">Layermate</span><span class="tool-desc">クレジットモニタリング</span></div>
+              <span class="tool-arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="app-footer">
+      <div class="app-footer-inner">
+        <span class="footer-brand">IXYAS クリエイティブ室 — AI検証モニタリング</span>
+        <span class="footer-note">社内利用限定</span>
+      </div>
+    </footer>
 </div>
 
-<!-- ツール入力画面 -->
-<div id="tool-screen" style="display:none">
-  <div style="max-width:1080px;margin:0 auto;padding:32px 24px 0">
-    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:1.5rem">
-      <div>
-        <p style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Reel Production</p>
-        <h1 id="tool-screen-title" style="font-family:'IBM Plex Mono',monospace;font-size:20px">ツールモニタリング</h1>
+<!-- Layermateツール画面 -->
+<div id="tool-screen" style="display:none;height:100vh;flex-direction:column;overflow:hidden">
+    <header class="app-header">
+      <div class="app-header-inner">
+        <div class="hdr-brand">
+          <span class="hdr-org">IXYAS クリエイティブ室</span>
+          <div class="hdr-divider"></div>
+          <span class="hdr-product">AI検証モニタリング</span>
+        </div>
+        <div class="hdr-right"><button class="btn-logout" onclick="backToLogin()">← ログイン画面に戻る</button></div>
       </div>
-      <button class="btn-logout" onclick="backToToolHub()">← ツール一覧に戻る</button>
+    </header>
+    <div class="vtabs-bar">
+      <div class="vtabs-bar-inner" style="padding:0 24px;height:38px;display:flex;align-items:center;gap:8px">
+        <button onclick="backToToolHub()" style="background:none;border:none;cursor:pointer;font-size:14px;font-weight:700;color:var(--accent);font-family:'Noto Sans JP',sans-serif;padding:0">UIツールモニタリング</button>
+        <span style="font-size:12px;color:var(--dim)">›</span>
+        <span style="font-size:14px;color:var(--muted)" id="tool-screen-title">Layermate</span>
+      </div>
     </div>
-    <div class="mtabs" id="lm-month-nav"></div>
-  </div>
-
-  <div style="max-width:1080px;margin:0 auto;padding:0 24px">
-    <!-- Layermate -->
-    <div id="tool-layermate">
+    <div class="content-wrapper">
+      <div class="main-content">
+        <div style="margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center">
+          <div class="mtabs" id="lm-month-nav" style="margin-bottom:0;flex:1"></div>
+        </div>
+        <div id="tool-layermate">
       <div class="sec">
         <div class="sec-hdr">
           <span class="sec-tag tag-ai">Layermate</span>
@@ -762,9 +825,15 @@ td input::placeholder{color:var(--dim)}
         <button class="btn-save" onclick="doSaveLm()">保存する</button>
       </div>
     </div>
-  </div>
+      </div>
+    </div>
+    <footer class="app-footer">
+      <div class="app-footer-inner">
+        <span class="footer-brand">IXYAS クリエイティブ室 — AI検証モニタリング</span>
+        <span class="footer-note">社内利用限定</span>
+      </div>
+    </footer>
 </div>
-
 <script>
 // ── Firebase初期化 ──
 const firebaseConfig = {
@@ -907,21 +976,35 @@ function setSaveStatus(txt,cls){
 }
 
 // ── 月タブ ──
-async function renderTabs(){
-  const nav=document.getElementById('month-nav');nav.innerHTML='';
-  let savedMonths=new Set();
+function setActiveMonthTab(idx){
+  document.querySelectorAll('#month-nav .mtab').forEach((btn,i)=>{
+    btn.classList.toggle('active',i===idx);
+  });
+}
+async function refreshTabDots(){
   try{
     const snap=await db.collection('dashboard').where('_user','==',currentUser).get();
-    snap.forEach(doc=>savedMonths.add(doc.data()['_month']));
+    const saved=new Set();
+    snap.forEach(doc=>saved.add(doc.data()['_month']));
+    document.querySelectorAll('#month-nav .mtab').forEach((btn,i)=>{
+      btn.classList.toggle('has-data',saved.has(MKEYS[i]));
+    });
   }catch(e){}
-  MONTHS.forEach((m,i)=>{
-    const btn=document.createElement('button');
-    btn.className='mtab'+(i===curMonth?' active':'');
-    if(savedMonths.has(MKEYS[i]))btn.classList.add('has-data');
-    btn.textContent=m;
-    btn.onclick=()=>{curMonth=i;renderTabs();loadFields();};
-    nav.appendChild(btn);
-  });
+}
+async function renderTabs(){
+  const nav=document.getElementById('month-nav');
+  if(!nav.children.length){
+    MONTHS.forEach((m,i)=>{
+      const btn=document.createElement('button');
+      btn.className='mtab'+(i===curMonth?' active':'');
+      btn.textContent=m;
+      btn.onclick=()=>{curMonth=i;setActiveMonthTab(i);loadFields();refreshTabDots();};
+      nav.appendChild(btn);
+    });
+  } else {
+    setActiveMonthTab(curMonth);
+  }
+  refreshTabDots();
 }
 
 // ── 計算 ──
@@ -1117,23 +1200,34 @@ function computeLm(){
   }
 }
 
-function renderLmTabs(){
-  const nav=document.getElementById('lm-month-nav');if(!nav)return;
-  nav.innerHTML='';
-  MONTHS.forEach((m,i)=>{
-    const btn=document.createElement('button');
-    btn.className='mtab'+(i===lmMonth?' active':'');
-    btn.textContent=m;
-    btn.onclick=()=>{lmMonth=i;renderLmTabs();loadLmFields();};
-    nav.appendChild(btn);
+function setActiveLmTab(idx){
+  document.querySelectorAll('#lm-month-nav .mtab').forEach((btn,i)=>{
+    btn.classList.toggle('active',i===idx);
   });
+}
+function refreshLmTabDots(){
   db.collection('layermate').get().then(snap=>{
     const saved=new Set();
     snap.forEach(doc=>{const d=doc.data();if(d._month)saved.add(d._month);});
-    nav.querySelectorAll('.mtab').forEach((b,i)=>{
-      if(saved.has(MKEYS[i]))b.classList.add('has-data');
+    document.querySelectorAll('#lm-month-nav .mtab').forEach((b,i)=>{
+      b.classList.toggle('has-data',saved.has(MKEYS[i]));
     });
   }).catch(()=>{});
+}
+function renderLmTabs(){
+  const nav=document.getElementById('lm-month-nav');if(!nav)return;
+  if(!nav.children.length){
+    MONTHS.forEach((m,i)=>{
+      const btn=document.createElement('button');
+      btn.className='mtab'+(i===lmMonth?' active':'');
+      btn.textContent=m;
+      btn.onclick=()=>{lmMonth=i;setActiveLmTab(i);loadLmFields();refreshLmTabDots();};
+      nav.appendChild(btn);
+    });
+  } else {
+    setActiveLmTab(lmMonth);
+  }
+  refreshLmTabDots();
 }
 
 function lmDocKey(){return`lm_${MKEYS[lmMonth]}`;}
@@ -1175,45 +1269,39 @@ async function clearLmMonth(){
 
 function switchView(v){
   const group=currentRole==='roi'?'roi':'team';
-  document.getElementById('input-view').style.display=v==='input'?'':'none';
-  document.getElementById('accum-roi-view').style.display=(v==='accum'&&group==='roi')?'':'none';
-  document.getElementById('accum-team-view').style.display=(v==='accum'&&group==='team')?'':'none';
-  document.getElementById('analytic-view').style.display=v==='analytics'?'':'none';
+  document.getElementById('input-view').style.display=v==='input'?'block':'none';
+  document.getElementById('accum-roi-view').style.display=(v==='accum'&&group==='roi')?'block':'none';
+  document.getElementById('accum-team-view').style.display=(v==='accum'&&group==='team')?'block':'none';
+  document.getElementById('analytic-view').style.display=v==='analytics'?'block':'none';
   ['input','accum','analytics'].forEach(id=>{
     const el=document.getElementById('vtab-'+id);
     if(el)el.className='vtab'+(v===id?' active':'');
   });
+  const cw=document.getElementById('content-wrapper');
+  if(cw)cw.scrollTop=0;
   if(v==='accum')renderAccum(group);
   if(v==='analytics')renderAnalytics(group);
 }
 
 function openToolHub(){
   document.getElementById('login-screen').style.display='none';
-  document.getElementById('tool-hub').style.display='';
+  document.getElementById('tool-hub').style.display='flex';
 }
-
 function openTool(toolId){
   document.getElementById('tool-hub').style.display='none';
-  document.getElementById('tool-screen').style.display='';
-  document.getElementById('tool-screen-title').textContent=toolId==='layermate'?'Layermate モニタリング':'ツールモニタリング';
-  // 初回表示時は今月のタブをデフォルト選択
-  const now=new Date();
-  const mm=String(now.getMonth()+1).padStart(2,'0');
-  const idx=MKEYS.indexOf(mm);
-  if(idx!==-1)lmMonth=idx;
-  const _now=new Date();const _mm=String(_now.getMonth()+1).padStart(2,'0');const _idx=MKEYS.indexOf(_mm);if(_idx!==-1)lmMonth=_idx;
+  document.getElementById('tool-screen').style.display='flex';
+  const el=document.getElementById('tool-screen-title');
+  if(el)el.textContent=toolId==='layermate'?'Layermate':'ツール';
+  const now=new Date();const mm=String(now.getMonth()+1).padStart(2,'0');const idx=MKEYS.indexOf(mm);if(idx!==-1)lmMonth=idx;
   renderLmTabs();loadLmFields();
 }
-
 function backToToolHub(){
   document.getElementById('tool-screen').style.display='none';
-  document.getElementById('tool-hub').style.display='';
+  document.getElementById('tool-hub').style.display='flex';
 }
-
 function backToLogin(){
-  document.getElementById('tool-screen').style.display='none';
   document.getElementById('tool-hub').style.display='none';
-  document.getElementById('main-screen').style.display='none';
+  document.getElementById('tool-screen').style.display='none';
   document.getElementById('login-screen').style.display='flex';
 }
 
