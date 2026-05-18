@@ -907,6 +907,8 @@ auth.onAuthStateChanged(async (user) => {
     }
   } else {
     document.getElementById('auth-screen').style.display='flex';
+    const btn = document.getElementById('btn-google-auth');
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; }
   }
 });
 
