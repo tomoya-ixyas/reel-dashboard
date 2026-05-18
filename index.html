@@ -399,7 +399,7 @@ td input::placeholder{color:var(--dim)}
           <span id="disp-user">—</span>
           <span class="role-badge" id="role-badge">—</span>
         </div>
-        <button class="btn-logout" onclick="doLogout()">ログアウト</button>
+        <button class="btn-logout" onclick="backToTop()">← Topページに戻る</button>
       </div>
     </div>
   </header>
@@ -643,7 +643,7 @@ td input::placeholder{color:var(--dim)}
           <div class="hdr-divider"></div>
           <span class="hdr-product">AI検証モニタリング</span>
         </div>
-        <div class="hdr-right"><button class="btn-logout" onclick="backToLogin()">← ログイン画面に戻る</button></div>
+        <div class="hdr-right"><button class="btn-logout" onclick="backToLogin()">← Topページに戻る</button></div>
       </div>
     </header>
     <div class="vtabs-bar">
@@ -683,7 +683,7 @@ td input::placeholder{color:var(--dim)}
           <div class="hdr-divider"></div>
           <span class="hdr-product">AI検証モニタリング</span>
         </div>
-        <div class="hdr-right"><button class="btn-logout" onclick="backToLogin()">← ログイン画面に戻る</button></div>
+        <div class="hdr-right"><button class="btn-logout" onclick="backToLogin()">← Topページに戻る</button></div>
       </div>
     </header>
     <div class="vtabs-bar">
@@ -1367,6 +1367,10 @@ function openTool(toolId){
 function backToToolHub(){
   document.getElementById('tool-screen').style.display='none';
   document.getElementById('tool-hub').style.display='flex';
+}
+function backToTop(){
+  document.getElementById('main-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
 }
 function backToLogin(){
   document.getElementById('tool-hub').style.display='none';
