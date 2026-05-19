@@ -289,6 +289,13 @@ td input::placeholder{color:var(--dim)}
 .kpi-val{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600}
 .kpi-note{font-size:13px;color:var(--muted);margin-top:4px}
 
+.lm-overage-row{display:none;align-items:center;justify-content:space-between;margin-top:8px;padding:7px 10px;border-radius:8px;background:rgba(229,57,53,.06);border:1px solid rgba(229,57,53,.2)}
+.lm-overage-row.show{display:flex}
+.lm-overage-row.under{background:rgba(0,128,85,.06);border-color:rgba(0,128,85,.2)}
+.lm-overage-label{font-size:12px;color:var(--muted)}
+.lm-overage-val{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--accent3)}
+.lm-overage-val.under{color:var(--accent2)}
+
 /* ── Layermate蓄積カード ── */
 .lm-accum-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
 .lm-accum-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface2)}
@@ -798,6 +805,10 @@ td input::placeholder{color:var(--dim)}
                   <div><span class="lm-result-label">消費合計</span><span class="lm-result-val" id="lm-m-total-cr">—</span></div>
                   <div><span class="lm-result-label">消費割合</span><span class="lm-result-ratio" id="lm-m-ratio">—</span></div>
                 </div>
+                <div class="lm-overage-row" id="lm-m-overage-row">
+                  <span class="lm-overage-label">月次付与に対する超過</span>
+                  <span class="lm-overage-val" id="lm-m-overage">—</span>
+                </div>
                 <div class="bar" style="margin-top:8px"><div class="bar-fill" id="lm-bar-m" style="width:0"></div></div>
               </div>
             </div>
@@ -843,6 +854,10 @@ td input::placeholder{color:var(--dim)}
                   <div><span class="lm-result-label">案件合計</span><span class="lm-result-val" id="lm-s-total-cnt">—</span></div>
                   <div><span class="lm-result-label">消費合計</span><span class="lm-result-val" id="lm-s-total-cr">—</span></div>
                   <div><span class="lm-result-label">消費割合</span><span class="lm-result-ratio" id="lm-s-ratio">—</span></div>
+                </div>
+                <div class="lm-overage-row" id="lm-s-overage-row">
+                  <span class="lm-overage-label">月次付与に対する超過</span>
+                  <span class="lm-overage-val" id="lm-s-overage">—</span>
                 </div>
                 <div class="bar" style="margin-top:8px"><div class="bar-fill" id="lm-bar-s" style="width:0"></div></div>
               </div>
@@ -1224,6 +1239,26 @@ function computeLm(){
     if(rEl){
       rEl.textContent=ratio!==null?ratio.toFixed(1)+'%':'—';
       rEl.style.color=ratio===null?'':ratio>90?'var(--accent3)':ratio>70?'var(--accent4)':'var(--accent2)';
+    }
+    // 月次付与超過
+    const overage = grant > 0 ? totalCr - grant : null;
+    const ovrRow = document.getElementById(prefix+'-overage-row');
+    const ovrVal = document.getElementById(prefix+'-overage');
+    if(ovrRow && ovrVal){
+      if(overage !== null && totalCr > 0){
+        ovrRow.classList.add('show');
+        if(overage > 0){
+          ovrRow.classList.remove('under');
+          ovrVal.className='lm-overage-val';
+          ovrVal.textContent='+'+overage+'cr オーバー';
+        } else {
+          ovrRow.classList.add('under');
+          ovrVal.className='lm-overage-val under';
+          ovrVal.textContent=overage===0?'ちょうど':Math.abs(overage)+'cr 余り';
+        }
+      } else {
+        ovrRow.classList.remove('show');
+      }
     }
     return{totalCr,realGrant,ratio,totalCnt};
   };
