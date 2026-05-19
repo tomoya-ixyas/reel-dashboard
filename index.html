@@ -169,8 +169,8 @@ td input::placeholder{color:var(--dim)}
 .save-status.saved{color:var(--accent2)}
 .save-status.saving{color:var(--accent4)}
 /* ── トースト通知 ── */
-#toast{position:fixed;bottom:32px;right:32px;background:var(--surface);border:1px solid var(--accent2);border-radius:12px;padding:13px 20px;display:flex;align-items:center;gap:10px;font-family:'Noto Sans JP','YuGothic',sans-serif;font-size:14px;font-weight:500;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:9999;opacity:0;transform:translateY(12px);transition:opacity .25s,transform .25s;pointer-events:none}
-#toast.show{opacity:1;transform:translateY(0)}
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--surface);border:1px solid var(--accent2);border-radius:12px;padding:13px 20px;display:flex;align-items:center;gap:10px;font-family:'Noto Sans JP','YuGothic',sans-serif;font-size:14px;font-weight:500;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:9999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #toast .toast-icon{width:20px;height:20px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #toast .toast-icon svg{width:12px;height:12px}
 .btn-save{background:var(--accent);border:none;border-radius:100px;color:#fff;font-family:'Noto Sans JP','YuGothic','游ゴシック','Yu Gothic',sans-serif;font-size:15px;font-weight:500;padding:12px 28px;cursor:pointer;transition:opacity .15s}
