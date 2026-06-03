@@ -273,8 +273,8 @@ td input::placeholder{color:var(--dim)}
 .grate-gauge-fill{height:100%;border-radius:4px;transition:width .4s;max-width:100%}
 .grate-gauge-fill.over{background:var(--accent2)}
 .grate-gauge-fill.under{background:var(--accent3)}
-.grate-gauge-marker{position:absolute;top:-5px;left:50%;width:2px;height:18px;background:rgba(229,57,53,.7);border-radius:1px;transform:translateX(-50%)}
-.grate-gauge-marker::after{content:'目標 50%';position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
+.grate-gauge-marker{position:absolute;top:-5px;left:60%;width:2px;height:18px;background:rgba(229,57,53,.7);border-radius:1px;transform:translateX(-50%)}
+.grate-gauge-marker::after{content:'目標 60%';position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
 .grate-gauge-nums{display:flex;justify-content:space-between;align-items:baseline}
 .grate-actual{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600}
 .grate-actual.over{color:var(--accent2)}
@@ -470,7 +470,7 @@ td input::placeholder{color:var(--dim)}
           <div class="g3" style="margin-bottom:24px">
             <div class="fld"><div class="fld-num">①</div><div class="fld-label">制作時間総数（月合計）</div><input type="number" id="r-total-hours" placeholder="例: 48" min="0" step="0.5"></div>
             <div class="fld"><div class="fld-num">base</div><div class="fld-label">制作本数 / AI使用本数</div><input type="number" id="r-total-videos" placeholder="本数 例: 8"><input type="number" id="r-ai-videos" class="sub" placeholder="AI使用 例: 5"></div>
-            <div class="fld calc"><div class="fld-num">② 自動計算</div><div class="fld-label">1本あたり制作時間</div><div class="computed" id="r-c-pv"><span class="empty">入力待ち</span></div><div class="bar"><div class="bar-fill" id="r-b1" style="width:0;background:var(--accent)"></div></div></div>
+            <div class="fld calc"><div class="fld-num">② 自動計算</div><div class="fld-label">1本あたり制作時間</div><div class="computed" id="r-c-pv"><span class="empty">入力待ち</span></div><div class="bar"><div class="bar-fill" id="r-b1" style="width:0;background:var(--accent)"></div></div><div class="fld-label" style="margin-top:10px;font-size:12px">1本あたり Firefly</div><div class="computed yellow" id="r-c-fpv" style="font-size:18px"><span class="empty">—</span></div></div>
           </div>
 
           <!-- コスト内訳 -->
@@ -495,10 +495,10 @@ td input::placeholder{color:var(--dim)}
               <div class="ct-auto"><div class="computed yellow" id="r-c-cs-cost" style="font-size:18px"><span class="empty">—</span></div></div>
             </div>
             <div class="ct-row">
-              <div class="ct-person">Firefly</div>
+              <div class="ct-person">Firefly<span style="font-size:11px;color:var(--muted);margin-left:6px">（月額固定）</span></div>
               <div><input type="number" id="r-firefly" placeholder="月額 例: 3280"></div>
-              <div class="ct-ref">AI使用本数と連動</div>
-              <div class="ct-auto"><div class="computed yellow" id="r-c-fpv" style="font-size:18px"><span class="empty">—</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">1本あたり</div></div>
+              <div></div>
+              <div class="ct-auto"><div class="computed yellow" id="r-c-ff-total" style="font-size:18px"><span class="empty">—</span></div></div>
             </div>
           </div>
 
@@ -620,7 +620,7 @@ td input::placeholder{color:var(--dim)}
       <div class="sec-body">
         <div class="kpi-strip">
           <div class="kpi-card"><div class="kpi-label">累計粗利</div><div class="kpi-val blue" id="an-kpi-gross">—</div><div class="kpi-note">全記録月の合計</div></div>
-          <div class="kpi-card"><div class="kpi-label">平均粗利率</div><div class="kpi-val green" id="an-kpi-grate">—</div><div class="kpi-note" id="an-kpi-gdiff-note">目標 50%</div></div>
+          <div class="kpi-card"><div class="kpi-label">平均粗利率</div><div class="kpi-val green" id="an-kpi-grate">—</div><div class="kpi-note" id="an-kpi-gdiff-note">目標 60%</div></div>
           <div class="kpi-card"><div class="kpi-label">平均 1本あたり</div><div class="kpi-val blue" id="an-kpi-pvh">—</div><div class="kpi-note">制作時間</div></div>
           <div class="kpi-card"><div class="kpi-label">平均検証比率</div><div class="kpi-val" id="an-kpi-vr">—</div><div class="kpi-note">目標 10〜15%</div></div>
         </div>
@@ -1168,6 +1168,7 @@ function computeRoi(){
   const b1=document.getElementById('r-b1');if(b1)b1.style.width=pv?Math.min(pv/6*100,100)+'%':'0';
   const fpv=av>0?fm/av:null;
   setC('r-c-fpv',fpv!==null?fmt(fpv,'¥'):null,'yellow');
+  setC('r-c-ff-total',fm>0?fmt(fm,'¥'):null,'yellow');
   const csCost=cs*csHr, onoCost=th*hr;
   setC('r-c-cs-cost',csHr>0&&cs>0?fmt(csCost,'¥'):null,'yellow');
   setC('r-c-ono-cost',hr>0&&th>0?fmt(onoCost,'¥'):null,'yellow');
@@ -1184,8 +1185,8 @@ function computeRoi(){
   if(tRow&&actualVal&&gapText&&gaugeFill){
     if(gr!==null&&fee>0){
       tRow.className='grate-target-row show';
-      const isOver=gr>=50;
-      const diff=Math.abs(gr-50).toFixed(1);
+      const isOver=gr>=60;
+      const diff=Math.abs(gr-60).toFixed(1);
       actualVal.textContent='実績 '+gr.toFixed(1)+'%';
       actualVal.className='grate-actual '+(isOver?'over':'under');
       gapText.textContent=isOver?'▲ +'+diff+'%':'▼ -'+diff+'%';
@@ -1534,7 +1535,7 @@ async function renderAccum(group){
               <td style="vertical-align:top;padding-top:14px">${fpv!==null?'¥'+Math.round(fpv).toLocaleString():'—'}</td>
               <td style="vertical-align:top;padding-top:14px">${fee?'¥'+fee.toLocaleString():'—'}</td>
               <td style="vertical-align:top;padding-top:14px" class="${gross===null?'':(gross>=0?'col-pos':'col-neg')}">${gross!==null?'¥'+Math.round(gross).toLocaleString():'—'}</td>
-              <td style="vertical-align:top;padding-top:14px" class="${grossRate===null?'':(grossRate>=50?'col-pos':'col-neg')}">${grossRate!==null?`${grossRate.toFixed(1)}%<br><span style="font-size:11px;opacity:.85">${grossRate>=50?'▲ +':'▼ -'}${Math.abs(grossRate-50).toFixed(1)}%</span>`:'—'}</td>
+              <td style="vertical-align:top;padding-top:14px" class="${grossRate===null?'':(grossRate>=60?'col-pos':'col-neg')}">${grossRate!==null?`${grossRate.toFixed(1)}%<br><span style="font-size:11px;opacity:.85">${grossRate>=60?'▲ +':'▼ -'}${Math.abs(grossRate-60).toFixed(1)}%</span>`:'—'}</td>
               <td style="vertical-align:top;padding-top:14px" class="${vr===null?'':(vr>15?'col-neg':vr>=10?'col-warn':'col-pos')}">${vr!==null?vr.toFixed(1)+'%':'—'}</td>
               <td style="white-space:normal;padding:12px 16px;vertical-align:top">${notesCell}</td>
             </tr>`;
@@ -1696,7 +1697,7 @@ async function renderAnalytics(group){
       const gdiffNote=document.getElementById('an-kpi-gdiff-note');
       if(gdiffNote&&grateArr.length){
         const avgGrate=avg(grateArr);
-        gdiffNote.textContent='実績 '+avgGrate.toFixed(1)+'%　目標 50%';
+        gdiffNote.textContent='実績 '+avgGrate.toFixed(1)+'%　目標 60%';
       }
       set('an-kpi-pvh',vpvh.length?avg(vpvh).toFixed(1)+'h':'—','blue');
       const vrA=avg(vvr);const vrKpi=document.getElementById('an-kpi-vr');
@@ -1704,9 +1705,9 @@ async function renderAnalytics(group){
       _mkChart('chart-gross',{type:'bar',data:{labels,datasets:[{data:grossArr.map(v=>v??0),backgroundColor:grossArr.map(v=>v===null?'#c9dee0':v>=0?'rgba(0,163,108,.5)':'rgba(229,57,53,.5)'),borderColor:grossArr.map(v=>v===null?'transparent':v>=0?'#00a36c':'#e53935'),borderWidth:1,borderRadius:4}]},options:{...co,plugins:{...co.plugins,tooltip:{callbacks:{label:ctx=>'¥'+Math.round(ctx.raw).toLocaleString()}}},scales:{y:{...co.scales.y,ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
       const grateChartArr=roi.map(d=>{const th=_v(d,'r-total-hours'),hr=_v(d,'r-hourly'),fm=_v(d,'r-firefly'),cs=_v(d,'r-cs'),csHr=_v(d,'r-cs-hourly'),fee=_v(d,'r-fee');if(!fee)return null;return(fee-(th*hr+fm+cs*csHr))/fee*100;});
       _mkChart('chart-grate',{type:'bar',data:{labels,datasets:[
-        {label:'粗利率',data:grateChartArr.map(v=>v??0),backgroundColor:grateChartArr.map(v=>v===null?'transparent':v>=50?'rgba(0,163,108,.6)':'rgba(229,57,53,.5)'),borderColor:grateChartArr.map(v=>v===null?'transparent':v>=50?'#00a36c':'#e53935'),borderWidth:1,borderRadius:4},
-        {label:'目標 50%',data:labels.map(()=>50),type:'line',borderColor:'rgba(229,57,53,.7)',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false}
-      ]},options:{...co,plugins:{...co.plugins,legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label==='目標 50%'?null:ctx.parsed.y.toFixed(1)+'%'}}},scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,70);}},x:co.scales.x}}});
+        {label:'粗利率',data:grateChartArr.map(v=>v??0),backgroundColor:grateChartArr.map(v=>v===null?'transparent':v>=60?'rgba(0,163,108,.6)':'rgba(229,57,53,.5)'),borderColor:grateChartArr.map(v=>v===null?'transparent':v>=60?'#00a36c':'#e53935'),borderWidth:1,borderRadius:4},
+        {label:'目標 60%',data:labels.map(()=>60),type:'line',borderColor:'rgba(229,57,53,.7)',borderDash:[5,4],borderWidth:2,pointRadius:0,fill:false}
+      ]},options:{...co,plugins:{...co.plugins,legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label==='目標 60%'?null:ctx.parsed.y.toFixed(1)+'%'}}},scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,80);}},x:co.scales.x}}});
       _mkChart('chart-vr',{type:'line',data:{labels,datasets:[{data:vrArr,borderColor:'#00a36c',backgroundColor:'rgba(0,163,108,.08)',tension:.3,spanGaps:true,pointRadius:4,fill:true}]},options:{...co,scales:{y:{...co.scales.y,min:0,ticks:{callback:v=>v+'%'},afterDataLimits:s=>{s.max=Math.max(s.max||0,20);}}}}});
       _mkChart('chart-pvh',{type:'bar',data:{labels,datasets:[{data:pvhArr.map(v=>v??0),backgroundColor:'rgba(0,128,85,.5)',borderColor:'#008055',borderWidth:1,borderRadius:4}]},options:{...co,scales:{y:{...co.scales.y,ticks:{callback:v=>v+'h'}}}}});
       _mkChart('chart-cost',{type:'bar',data:{labels,datasets:[{label:'人件費',data:laborArr,backgroundColor:'rgba(0,128,85,.55)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4}},{label:'Firefly',data:ffArr,backgroundColor:'rgba(224,120,0,.55)',borderWidth:0,borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}}]},options:{...co,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{stacked:true,grid:{color:'rgba(201,222,224,.6)'}},y:{stacked:true,grid:{color:'#c9dee0'},ticks:{callback:v=>'¥'+(Math.abs(v)>=1000?Math.round(v/1000)+'k':v)}}}}});
